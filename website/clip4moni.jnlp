@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp codebase="http://clip4moni.googlecode.com/svn/trunk/website"
+      href="clip4moni.jnlp">
+      
+<information>
+<title>Clip4Moni</title>
+<vendor>Thomas Kuenneth</vendor>
+<offline-allowed />
+<homepage href="http://code.google.com/p/clip4moni/" />
+<description>
+a small utility that manages text snippets
+</description>
+
+<icon href="Clip4Moni_logo.gif" />
+<icon href="Clip4Moni_splash.jpg"
+      kind="splash" />
+</information>
+
+<resources>
+<j2se version="1.6+"/>
+<jar href="clip4moni.jar"/>
+</resources>
+
+<security>
+<all-permissions />
+</security>
+
+<application-desc main-class="com.thomaskuenneth.clip4moni.Clip4Moni"/>
+
+</jnlp>
