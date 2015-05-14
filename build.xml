@@ -72,6 +72,19 @@
 
     -->
     
+    <tstamp>
+        <format property="now" pattern="yyMMdd"/>
+    </tstamp>
+    
+    <target name="-pre-jar">
+        <manifest file="${basedir}/manifest.mf">
+            <attribute name="Created-By" value="${application.vendor}"/>
+            <attribute name="Implementation-Title" value="${application.title}"/>
+            <attribute name="Implementation-Vendor" value="${application.vendor}"/>
+            <attribute name="Implementation-Version" value="${now}"/>
+        </manifest>
+    </target>
+    
     <target name="-post-jar">
         <copy file="${dist.jar}" todir="${basedir}/Clip4Moni.app/Contents/Resources/Java" /> 
     </target>

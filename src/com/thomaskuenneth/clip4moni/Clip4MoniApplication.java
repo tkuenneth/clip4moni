@@ -38,6 +38,11 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.text.DateFormat;
+import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -49,17 +54,17 @@ public class Clip4MoniApplication implements ActionListener,
         ClipboardOwner {
 
     private static final Clip4MoniApplication INSTANCE = new Clip4MoniApplication();
-    
+
     private static final String TAG = Clip4MoniApplication.class.getName();
     private static final Logger LOGGER = Logger.getLogger(TAG);
-    
+
     private static final String ICONFILENAME_16 = "com/thomaskuenneth/clip4moni/graphics/16x16.png";
     private static final String ICONFILENAME_22 = "com/thomaskuenneth/clip4moni/graphics/17x22.png";
-    
+
     private static final String PROGRAMICON = "com/thomaskuenneth/clip4moni/graphics/logo.png";
-    
+
     private static final SystemTray tray = SystemTray.getSystemTray();
-    
+
     private Clipboard systemClipboard;
     private DataFlavor plainText;
     private DefaultListModel snippets;
@@ -88,7 +93,7 @@ public class Clip4MoniApplication implements ActionListener,
             LOGGER.throwing(TAG, "prepareClipboard()", ex);
         }
     }
-    
+
     private void createUI() {
         snippets = new DefaultListModel();
         loadList(Helper.getFileList());
@@ -308,9 +313,24 @@ public class Clip4MoniApplication implements ActionListener,
      * show a copyright box
      */
     private void info() {
-        ImageIcon icon = UIHelper.getImageIcon(getClass(), PROGRAMICON);
-        JOptionPane.showMessageDialog(null, Messages.STR_INFOTEXT, Messages.STR_ABOUT,
-                JOptionPane.INFORMATION_MESSAGE, icon);
+        String title = getClass().getPackage().getImplementationTitle();
+        String vendor = getClass().getPackage().getImplementationVendor();
+        String version = getClass().getPackage().getImplementationVersion();
+        try {
+            String date = "???";
+            if (version != null) {
+                Date d = new SimpleDateFormat("yyMMdd").parse(version);
+                date = DateFormat.getDateInstance().format(d);
+            }
+            String text = MessageFormat.format(Messages.STR_INFOTEXT, title, vendor, date,
+                    System.getProperty("java.version"), System.getProperty("java.vendor"),
+                    System.getProperty("os.name"), System.getProperty("os.version"));
+            ImageIcon icon = UIHelper.getImageIcon(getClass(), PROGRAMICON);
+            JOptionPane.showMessageDialog(null, text, Messages.STR_ABOUT,
+                    JOptionPane.INFORMATION_MESSAGE, icon);
+        } catch (ParseException ex) {
+            Logger.getLogger(Clip4MoniApplication.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -349,7 +369,6 @@ public class Clip4MoniApplication implements ActionListener,
     // --------------
     // ActionListener
     // --------------
-
     @Override
     public void actionPerformed(ActionEvent e) {
         String name = MacHelp.getFrontmostApp();
@@ -377,7 +396,6 @@ public class Clip4MoniApplication implements ActionListener,
     // ---------------
     // ClipboardOwner
     // ---------------
-    
     @Override
     public void lostOwnership(Clipboard clipboard, Transferable contents) {
         LOGGER.info(contents.toString());
