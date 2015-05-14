@@ -1,0 +1,28 @@
+<html>
+
+    <body style="font-family: {0}">
+
+        <h1>Clip4Moni</h1><strong>geschrieben von Thomas K&uuml;nneth</strong><br>
+        Erstellungsdatum: {1}<br>Java-Version: {2} ({3})<br>Betriebssystem: {4} {5}
+        
+        <p>
+            <a href="http://www.thomaskuenneth.com/">www.thomaskuenneth.com</a><br>
+            <a href="mailto:thomas@thomaskuenneth.com">thomas@thomaskuenneth.com</a>
+        </p>
+
+        <p>
+            This program is free software; you can redistribute it and/or modify
+            it under the terms of the GNU General Public License version 2
+            as published by the Free Software Foundation.
+        </p>
+
+        <p>
+            This program is distributed in the hope that it will be useful,
+            but WITHOUT ANY WARRANTY; without even the implied warranty of
+            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+            <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-standalone.html">
+                GNU General Public License</a> for more details.
+        </p>
+    </body>
+
+</html>

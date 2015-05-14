@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2008 - 2013  Thomas Kuenneth
+ * Copyright (C) 2008 - 2015  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -38,11 +38,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.text.DateFormat;
-import java.text.MessageFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -313,24 +308,9 @@ public class Clip4MoniApplication implements ActionListener,
      * show a copyright box
      */
     private void info() {
-        String title = getClass().getPackage().getImplementationTitle();
-        String vendor = getClass().getPackage().getImplementationVendor();
-        String version = getClass().getPackage().getImplementationVersion();
-        try {
-            String date = "???";
-            if (version != null) {
-                Date d = new SimpleDateFormat("yyMMdd").parse(version);
-                date = DateFormat.getDateInstance().format(d);
-            }
-            String text = MessageFormat.format(Messages.STR_INFOTEXT, title, vendor, date,
-                    System.getProperty("java.version"), System.getProperty("java.vendor"),
-                    System.getProperty("os.name"), System.getProperty("os.version"));
             ImageIcon icon = UIHelper.getImageIcon(getClass(), PROGRAMICON);
-            JOptionPane.showMessageDialog(null, text, Messages.STR_ABOUT,
+            JOptionPane.showMessageDialog(null, new AboutView(), Messages.STR_ABOUT,
                     JOptionPane.INFORMATION_MESSAGE, icon);
-        } catch (ParseException ex) {
-            Logger.getLogger(Clip4MoniApplication.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /**

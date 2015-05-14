@@ -48,7 +48,6 @@ public class Messages {
     public static final String STR_ABOUT = getString("STR_ABOUT");
     public static final String STR_DESCRIPTION = getString("STR_DESCRIPTION");
     public static final String STR_CONTENTS = getString("STR_CONTENTS");
-    public static final String STR_INFOTEXT = getString("STR_INFOTEXT");
     public static final String MI_SETTINGS = getString("MI_SETTINGS");
     public static final String TITLE_SETTINGS = getString("TITLE_SETTINGS");
     public static final String STR_SETTINGS_SNIPPETS_PATH = getString("STR_SETTINGS_SNIPPETS_PATH");
