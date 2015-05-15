@@ -20,9 +20,9 @@ package com.thomaskuenneth.clip4moni;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,22 +77,21 @@ public class FileUtilities {
         return l;
     }
 
-    public static String getResourceAsString(URL url) {
+    public static String getResourceAsString(Class c, String url) {
         StringBuilder sb = new StringBuilder();
-        File f = new File(url.getFile());
-        FileInputStream fis = null;
+        InputStream is = null;
         try {
-            fis = new FileInputStream(f);
+            is = c.getResourceAsStream(url);
             int i;
-            while ((i = fis.read()) != -1) {
+            while ((i = is.read()) != -1) {
                 sb.append((char) i);
             }
         } catch (IOException e) {
             LOGGER.throwing(CLASS_NAME, "getResourceAsString", e);
         } finally {
-            if (fis != null) {
+            if (is != null) {
                 try {
-                    fis.close();
+                    is.close();
                 } catch (IOException e) {
                     LOGGER.throwing(CLASS_NAME, "getResourceAsString", e);
                 }

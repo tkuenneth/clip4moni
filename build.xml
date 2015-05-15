@@ -86,7 +86,29 @@
     </target>
     
     <target name="-post-jar">
-        <copy file="${dist.jar}" todir="${basedir}/Clip4Moni.app/Contents/Resources/Java" /> 
+        
+        <!--        <copy file="${dist.jar}" todir="${basedir}/Clip4Moni.app/Contents/Resources/Java" /> -->
+        
+        <jarbundler dir="${basedir}"
+                    name="Clip4Moni"
+                    mainclass="com.thomaskuenneth.clip4moni.Clip4Moni" 
+                    stubfile="${basedir}/universalJavaApplicationStub"
+                    icon="${basedir}/Clip4Moni.icns"
+                    jvmversion="1.7.*"
+                    isAgent="true"
+                    verbose="true"
+                    signature="C4M1"
+                    bundleid="com.thomaskuenneth.clip4moni">
+            
+            <jarfileset dir="${basedir}/dist">
+                <include name="**/*.jar" />
+            </jarfileset>
+                
+        </jarbundler>
+        
     </target>
+    
+    <taskdef name="jarbundler" 
+             classname="net.sourceforge.jarbundler.JarBundler" />
     
 </project>

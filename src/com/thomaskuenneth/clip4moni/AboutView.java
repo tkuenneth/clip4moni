@@ -50,7 +50,7 @@ public class AboutView extends JPanel {
     private static final String CLASS_NAME = AboutView.class.getName();
     private static final Logger LOGGER = Logger.getLogger(CLASS_NAME);
 
-    private static final String URL_INFO = "/com/thomaskuenneth/clip4moni/assets/info.txt";
+    private static final String URL_INFO = "/com/thomaskuenneth/clip4moni/assets/info.html";
 
     public AboutView() {
         super(new BorderLayout());
@@ -58,11 +58,11 @@ public class AboutView extends JPanel {
     }
 
     private void createUI() {
-        JTextArea a = new JTextArea(20, 50);
+        JTextArea a = new JTextArea(20, 40);
         JEditorPane pane = new JEditorPane();
         pane.setPreferredSize(a.getPreferredSize());
         Font font = pane.getFont();
-        String html = FileUtilities.getResourceAsString(getClass().getResource(URL_INFO));
+        String html = FileUtilities.getResourceAsString(getClass(), URL_INFO);
         String version = getClass().getPackage().getImplementationVersion();
         try {
             String date = StringUtils.UNKNOWN;
