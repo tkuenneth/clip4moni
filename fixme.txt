@@ -1,1 +1,0 @@
-- seems to be impossible to use Web Start: try finding a workaround

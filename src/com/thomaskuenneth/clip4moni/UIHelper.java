@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2008 - 2013  Thomas Kuenneth
+ * Copyright (C) 2008 - 2015  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -22,6 +22,7 @@ package com.thomaskuenneth.clip4moni;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Menu;
 import java.awt.MenuItem;
 import java.awt.event.ActionListener;
@@ -30,6 +31,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextArea;
 
 /**
  * This class offers ui-related helper methods.
@@ -37,6 +39,8 @@ import javax.swing.JPopupMenu;
  * @author Thomas Kuenneth
  */
 public class UIHelper {
+    
+    public static final Dimension PREFERRED_SIZE = new JTextArea(20, 40).getPreferredSize();
 
     /**
      * Creates a JButton, sets its text and ActionListener and sets AlignmentX

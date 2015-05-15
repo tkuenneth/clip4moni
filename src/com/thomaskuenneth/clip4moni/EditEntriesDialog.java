@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2013  Thomas Kuenneth
+ * Copyright (C) 2013 - 2015  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -58,6 +58,7 @@ public class EditEntriesDialog extends AbstractDialog implements ListSelectionLi
         list.setSelectedIndex(0);
         list.addListSelectionListener(this);
         JScrollPane sp = new JScrollPane(list);
+        sp.setPreferredSize(UIHelper.PREFERRED_SIZE);
         upButton = UIHelper.createButton(buttonBox, Messages.BTTN_UP, this);
         downButton = UIHelper.createButton(buttonBox, Messages.BTTN_DOWN, this);
         editButton = UIHelper.createButton(buttonBox, Messages.BTTN_EDIT, this);

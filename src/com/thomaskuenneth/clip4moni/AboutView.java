@@ -58,9 +58,8 @@ public class AboutView extends JPanel {
     }
 
     private void createUI() {
-        JTextArea a = new JTextArea(20, 40);
         JEditorPane pane = new JEditorPane();
-        pane.setPreferredSize(a.getPreferredSize());
+        pane.setPreferredSize(UIHelper.PREFERRED_SIZE);
         Font font = pane.getFont();
         String html = FileUtilities.getResourceAsString(getClass(), URL_INFO);
         String version = getClass().getPackage().getImplementationVersion();
@@ -85,9 +84,7 @@ public class AboutView extends JPanel {
                 if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
                     try {
                         Desktop.getDesktop().browse(e.getURL().toURI());
-                    } catch (IOException ex) {
-                        LOGGER.throwing(CLASS_NAME, "hyperlinkUpdate", ex);
-                    } catch (URISyntaxException ex) {
+                    } catch (IOException | URISyntaxException ex) {
                         LOGGER.throwing(CLASS_NAME, "hyperlinkUpdate", ex);
                     }
                 }

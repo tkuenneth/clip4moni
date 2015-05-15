@@ -94,9 +94,8 @@
                     mainclass="com.thomaskuenneth.clip4moni.Clip4Moni" 
                     stubfile="${basedir}/universalJavaApplicationStub"
                     icon="${basedir}/Clip4Moni.icns"
-                    jvmversion="1.7.*"
+                    jvmversion="1.7.+"
                     isAgent="true"
-                    verbose="true"
                     signature="C4M1"
                     bundleid="com.thomaskuenneth.clip4moni">
             

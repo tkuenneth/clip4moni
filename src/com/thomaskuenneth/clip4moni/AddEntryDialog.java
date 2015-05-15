@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2008 - 2013  Thomas Kuenneth
+ * Copyright (C) 2008 - 2015  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -21,7 +21,6 @@
 package com.thomaskuenneth.clip4moni;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -56,9 +55,7 @@ public class AddEntryDialog extends AbstractDialog implements MouseListener,
         JScrollPane sp = new JScrollPane(ta,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        Dimension screenSize = Helper.getScreenSize();
-        sp.setPreferredSize(new Dimension(screenSize.width * 2 / 3,
-                screenSize.height * 2 / 3));
+        sp.setPreferredSize(UIHelper.PREFERRED_SIZE);
         panelCenter.add(sp, BorderLayout.CENTER);
         add(panelNorth, BorderLayout.NORTH);
         add(panelCenter, BorderLayout.CENTER);
