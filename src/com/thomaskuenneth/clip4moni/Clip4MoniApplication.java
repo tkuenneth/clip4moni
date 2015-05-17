@@ -35,9 +35,11 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -67,6 +69,10 @@ public class Clip4MoniApplication implements ActionListener,
     private Menu pluginMenu;
 
     private Clip4MoniApplication() {
+    }
+
+    public static Clip4MoniApplication getInstance() {
+        return INSTANCE;
     }
 
     public static void launch() {
@@ -156,7 +162,7 @@ public class Clip4MoniApplication implements ActionListener,
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        systemClipboard.setContents(new StringSelection(text), Clip4MoniApplication.this);
+                        setContents(text);
                         MacHelp.activateApp(name);
                     }
                 });
@@ -164,14 +170,46 @@ public class Clip4MoniApplication implements ActionListener,
         }).start();
     }
 
+    private void setContents(final String text) {
+        Transferable t;
+        if (text.startsWith("{\\rtf1")) {
+            t = new Transferable() {
+
+                @Override
+                public DataFlavor[] getTransferDataFlavors() {
+                    try {
+                        return new DataFlavor[]{new DataFlavor("text/rtf")};
+                    } catch (ClassNotFoundException ex) {
+                        LOGGER.log(Level.SEVERE, "setContents()", ex);
+                    }
+                    return null;
+                }
+
+                @Override
+                public boolean isDataFlavorSupported(DataFlavor flavor) {
+                    return true;
+                }
+
+                @Override
+                public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+                    return new ByteArrayInputStream(text.getBytes(Charset.forName("US-ASCII")));
+                }
+
+            };
+        } else {
+            t = new StringSelection(text);
+        }
+        systemClipboard.setContents(t, getInstance());
+    }
+
     private void paste(String filename) {
         File f = FileHelper.createFilename(filename);
         String str = FileHelper.loadFile(f);
-        systemClipboard.setContents(new StringSelection(str), this);
+        setContents(str);
     }
 
     private void createPluginMenu() {
-        ActionListener al = new ActionListener() {
+        final ActionListener al = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String cmd = e.getActionCommand();
@@ -180,8 +218,8 @@ public class Clip4MoniApplication implements ActionListener,
         };
         pluginMenu = new Menu(Messages.MI_CLIPBOARD);
         String[] piNames = PluginManager.getPluginNames();
-        for (int i = 0; i < piNames.length; i++) {
-            UIHelper.createMenuItem(piNames[i], pluginMenu, al);
+        for (String piName : piNames) {
+            UIHelper.createMenuItem(piName, pluginMenu, al);
         }
     }
 
@@ -211,7 +249,7 @@ public class Clip4MoniApplication implements ActionListener,
      * this method shows Edit entries dialog
      */
     private void editList() {
-        EditEntriesDialog d = new EditEntriesDialog(snippets, this);
+        EditEntriesDialog d = new EditEntriesDialog(snippets);
         d.showDialog();
         saveList(Helper.getFileList());
     }
@@ -235,7 +273,7 @@ public class Clip4MoniApplication implements ActionListener,
         }
         AddEntryDialog addEntryDialog = new AddEntryDialog();
         if (addEntryDialog.showDialog(headline, title, contents) == JOptionPane.OK_OPTION) {
-            title = addEntryDialog.getText();
+            title = addEntryDialog.getDescription();
             File f = FileHelper.createFilename(name);
             if (FileHelper.saveFile(f, addEntryDialog.getContents())) {
                 if (e == null) {
@@ -281,9 +319,7 @@ public class Clip4MoniApplication implements ActionListener,
                             while ((ch = in.read()) != -1) {
                                 sb.append((char) ch);
                             }
-                        } catch (UnsupportedFlavorException e) {
-                            LOGGER.throwing(TAG, "copyFromClipboard()", e);
-                        } catch (IOException e) {
+                        } catch (UnsupportedFlavorException | IOException e) {
                             LOGGER.throwing(TAG, "copyFromClipboard()", e);
                         } finally {
                             if (in != null) {
@@ -308,9 +344,9 @@ public class Clip4MoniApplication implements ActionListener,
      * show a copyright box
      */
     private void info() {
-            ImageIcon icon = UIHelper.getImageIcon(getClass(), PROGRAMICON);
-            JOptionPane.showMessageDialog(null, new AboutView(), Messages.STR_ABOUT,
-                    JOptionPane.INFORMATION_MESSAGE, icon);
+        ImageIcon icon = UIHelper.getImageIcon(getClass(), PROGRAMICON);
+        JOptionPane.showMessageDialog(null, new AboutView(), Messages.STR_ABOUT,
+                JOptionPane.INFORMATION_MESSAGE, icon);
     }
 
     /**

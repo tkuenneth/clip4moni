@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2013  Thomas Kuenneth
+ * Copyright (C) 2013 - 2015  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -57,7 +57,7 @@ public class MacHelp {
                 LOGGER.log(Level.INFO, "{0} {1} {2} {3}", new Object[]{engineName, engineVersion, langName, langVersion});
                 List<String> mimeTypes = factory.getMimeTypes();
                 for (String mimeType : mimeTypes) {
-                    if (mimeType.indexOf("applescript") != -1) {
+                    if (mimeType.contains("applescript")) {
                         return factory.getScriptEngine();
                     }
                 }

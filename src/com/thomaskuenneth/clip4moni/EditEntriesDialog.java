@@ -37,20 +37,43 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 /**
+ * This dialog box shows a list of entries and allows to edit them.
  *
  * @author Thomas Kuenneth
  */
-public class EditEntriesDialog extends AbstractDialog implements ListSelectionListener, ActionListener {
+public class EditEntriesDialog extends AbstractDialog implements ListSelectionListener {
 
-    private DefaultListModel snippets;
-    private Clip4MoniApplication app;
-    private JButton deleteButton, editButton, upButton, downButton;
-    private JList list;
-    private JPanel editEntriesPanel;
+    private final DefaultListModel snippets;
+    private final JButton deleteButton, editButton, upButton, downButton;
+    private final JList list;
+    private final JPanel editEntriesPanel;
 
-    public EditEntriesDialog(DefaultListModel snippets, Clip4MoniApplication app) {
+    private final ActionListener al = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String cmd = e.getActionCommand();
+            if (cmd.equals(Messages.BTTN_DELETE)) {
+                Entry entry = (Entry) list.getSelectedValue();
+                if (entry != null) {
+                    Clip4MoniApplication.getInstance().deleteEntry(entry);
+                }
+                updateEditEntriesButtons();
+            } else if (cmd.equals(Messages.BTTN_EDIT)) {
+                Entry entry = (Entry) list.getSelectedValue();
+                if (entry != null) {
+                    Clip4MoniApplication.getInstance().editContents(null, entry);
+                }
+            } else if (cmd.equals(Messages.BTTN_UP)) {
+                moveEntry(true);
+            } else if (cmd.equals(Messages.BTTN_DOWN)) {
+                moveEntry(false);
+            }
+        }
+    };
+
+    public EditEntriesDialog(DefaultListModel snippets) {
         this.snippets = snippets;
-        this.app = app;
         editEntriesPanel = new JPanel(new BorderLayout());
         JPanel buttonBox = new JPanel(new GridLayout(4, 1, 4, 4));
         list = new JList(snippets);
@@ -59,10 +82,10 @@ public class EditEntriesDialog extends AbstractDialog implements ListSelectionLi
         list.addListSelectionListener(this);
         JScrollPane sp = new JScrollPane(list);
         sp.setPreferredSize(UIHelper.PREFERRED_SIZE);
-        upButton = UIHelper.createButton(buttonBox, Messages.BTTN_UP, this);
-        downButton = UIHelper.createButton(buttonBox, Messages.BTTN_DOWN, this);
-        editButton = UIHelper.createButton(buttonBox, Messages.BTTN_EDIT, this);
-        deleteButton = UIHelper.createButton(buttonBox, Messages.BTTN_DELETE, this);
+        upButton = UIHelper.createButton(buttonBox, Messages.BTTN_UP, al);
+        downButton = UIHelper.createButton(buttonBox, Messages.BTTN_DOWN, al);
+        editButton = UIHelper.createButton(buttonBox, Messages.BTTN_EDIT, al);
+        deleteButton = UIHelper.createButton(buttonBox, Messages.BTTN_DELETE, al);
         editEntriesPanel.add(sp, BorderLayout.CENTER);
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0,
                 0));
@@ -91,27 +114,6 @@ public class EditEntriesDialog extends AbstractDialog implements ListSelectionLi
     @Override
     public void valueChanged(ListSelectionEvent e) {
         updateEditEntriesButtons();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String cmd = e.getActionCommand();
-        if (cmd.equals(Messages.BTTN_DELETE)) {
-            Entry entry = (Entry) list.getSelectedValue();
-            if (entry != null) {
-                app.deleteEntry(entry);
-            }
-            updateEditEntriesButtons();
-        } else if (cmd.equals(Messages.BTTN_EDIT)) {
-            Entry entry = (Entry) list.getSelectedValue();
-            if (entry != null) {
-                app.editContents(null, entry);
-            }
-        } else if (cmd.equals(Messages.BTTN_UP)) {
-            moveEntry(true);
-        } else if (cmd.equals(Messages.BTTN_DOWN)) {
-            moveEntry(false);
-        }
     }
 
     /*

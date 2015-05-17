@@ -23,8 +23,11 @@ package com.thomaskuenneth.clip4moni;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -32,45 +35,84 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.border.TitledBorder;
 
-public class AddEntryDialog extends AbstractDialog implements MouseListener,
-        ActionListener {
+/**
+ * This dialog is used to enter a description and contents. The contents are
+ * put on the clipboard, whereas the description is used to show a particular
+ * entry in lists or dialogs.
+ * 
+ * @author thomas
+ */
+public class AddEntryDialog extends AbstractDialog {
+
+    private final JTextField textfieldDescription;
+    private final JTextArea textareaContents;
 
     private String title;
-    private JTextField tf;
-    private JTextArea ta;
-    private JPopupMenu pm;
 
     public AddEntryDialog() {
-        JPanel panelNorth = new JPanel(new BorderLayout());
-        panelNorth.setBorder(new TitledBorder(Messages.STR_DESCRIPTION));
-        tf = new JTextField();
-        panelNorth.add(tf, BorderLayout.CENTER);
-        JPanel panelCenter = new JPanel(new BorderLayout());
-        panelCenter.setBorder(new TitledBorder(Messages.STR_CONTENTS));
-        ta = new JTextArea();
-        ta.setWrapStyleWord(true);
-        ta.setLineWrap(true);
-        JScrollPane sp = new JScrollPane(ta,
+        // the description field
+        JPanel panelDescription = new JPanel(new BorderLayout());
+        textfieldDescription = new JTextField();
+        panelDescription.add(new JLabel(Messages.STR_DESCRIPTION), BorderLayout.NORTH);
+        panelDescription.add(textfieldDescription, BorderLayout.CENTER);
+        // the contents field
+        JPanel panelContents = new JPanel(new BorderLayout());
+        panelContents.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        panelContents.add(new JLabel(Messages.STR_CONTENTS), BorderLayout.NORTH);
+        textareaContents = new JTextArea();
+        textareaContents.setWrapStyleWord(true);
+        textareaContents.setLineWrap(true);
+        JScrollPane sp = new JScrollPane(textareaContents,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         sp.setPreferredSize(UIHelper.PREFERRED_SIZE);
-        panelCenter.add(sp, BorderLayout.CENTER);
-        add(panelNorth, BorderLayout.NORTH);
-        add(panelCenter, BorderLayout.CENTER);
-        pm = new JPopupMenu();
+        panelContents.add(sp, BorderLayout.CENTER);
+        add(panelDescription, BorderLayout.NORTH);
+        add(panelContents, BorderLayout.CENTER);
+        // ActionListener
+        final ActionListener al = new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String cmd = e.getActionCommand();
+                String result = PluginManager.callPlugin(cmd, textareaContents.getText());
+                textareaContents.setText(result);
+            }
+        };
+        // populate plugin menu
+        final JPopupMenu pm = new JPopupMenu();
         String[] piNames = PluginManager.getPluginNames();
-        for (int i = 0; i < piNames.length; i++) {
-            UIHelper.createJMenuItem(piNames[i], pm, this);
+        for (String piName : piNames) {
+            UIHelper.createJMenuItem(piName, pm, al);
         }
-        ta.addMouseListener(this);
+        // MouseListener
+        final MouseListener ml = new MouseAdapter() {
+
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                maybeShowPopup(mouseEvent);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+                maybeShowPopup(mouseEvent);
+            }
+
+            private void maybeShowPopup(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    pm.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+
+        };
+        textareaContents.addMouseListener(ml);
     }
 
-    public int showDialog(String headline, String title, String contents) {
-        tf.setText(title);
-        ta.setText(contents);
-        this.title = headline;
+    public int showDialog(String headline, String description, String contents) {
+        textfieldDescription.setText(description);
+        textareaContents.setText(contents);
+        title = headline;
         return showDialog();
     }
 
@@ -84,48 +126,11 @@ public class AddEntryDialog extends AbstractDialog implements MouseListener,
         return JOptionPane.OK_CANCEL_OPTION;
     }
 
-    public String getText() {
-        return tf.getText();
+    public String getDescription() {
+        return textfieldDescription.getText();
     }
 
     public String getContents() {
-        return ta.getText();
-    }
-
-    private void maybeShowPopup(MouseEvent e) {
-        if (e.isPopupTrigger()) {
-            pm.show(e.getComponent(), e.getX(), e.getY());
-        }
-    }
-
-    // MouseListener interface
-    @Override
-    public void mouseClicked(MouseEvent mouseEvent) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent mouseEvent) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent mouseEvent) {
-    }
-
-    @Override
-    public void mousePressed(MouseEvent mouseEvent) {
-        maybeShowPopup(mouseEvent);
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent mouseEvent) {
-        maybeShowPopup(mouseEvent);
-    }
-
-    // ActionListener interface
-    @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-        String cmd = actionEvent.getActionCommand();
-        String result = PluginManager.callPlugin(cmd, ta.getText());
-        ta.setText(result);
+        return textareaContents.getText();
     }
 }
