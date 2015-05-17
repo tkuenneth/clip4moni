@@ -220,6 +220,9 @@ public class Clip4MoniApplication implements ActionListener,
         String[] piNames = PluginManager.getPluginNames();
         for (String piName : piNames) {
             UIHelper.createMenuItem(piName, pluginMenu, al);
+            if (pluginMenu.getItemCount() == 1) {
+                pluginMenu.addSeparator();
+            }
         }
     }
 
@@ -345,7 +348,7 @@ public class Clip4MoniApplication implements ActionListener,
      */
     private void info() {
         ImageIcon icon = UIHelper.getImageIcon(getClass(), PROGRAMICON);
-        JOptionPane.showMessageDialog(null, new AboutView(), Messages.STR_ABOUT,
+        JOptionPane.showMessageDialog(null, new AboutView(), Messages.getString("STR_ABOUT"),
                 JOptionPane.INFORMATION_MESSAGE, icon);
     }
 

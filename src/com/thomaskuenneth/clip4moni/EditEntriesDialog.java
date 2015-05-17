@@ -103,7 +103,7 @@ public class EditEntriesDialog extends AbstractDialog implements ListSelectionLi
 
     @Override
     public String getTitle() {
-        return Messages.TITLE_EDIT_ENTRIES;
+        return Messages.getString("TITLE_EDIT_ENTRIES");
     }
 
     @Override

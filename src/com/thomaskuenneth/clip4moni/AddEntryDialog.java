@@ -37,10 +37,10 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 /**
- * This dialog is used to enter a description and contents. The contents are
- * put on the clipboard, whereas the description is used to show a particular
- * entry in lists or dialogs.
- * 
+ * This dialog is used to enter a description and contents. The contents are put
+ * on the clipboard, whereas the description is used to show a particular entry
+ * in lists or dialogs.
+ *
  * @author thomas
  */
 public class AddEntryDialog extends AbstractDialog {
@@ -54,12 +54,12 @@ public class AddEntryDialog extends AbstractDialog {
         // the description field
         JPanel panelDescription = new JPanel(new BorderLayout());
         textfieldDescription = new JTextField();
-        panelDescription.add(new JLabel(Messages.STR_DESCRIPTION), BorderLayout.NORTH);
+        panelDescription.add(new JLabel(Messages.getString("STR_DESCRIPTION")), BorderLayout.NORTH);
         panelDescription.add(textfieldDescription, BorderLayout.CENTER);
         // the contents field
         JPanel panelContents = new JPanel(new BorderLayout());
         panelContents.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-        panelContents.add(new JLabel(Messages.STR_CONTENTS), BorderLayout.NORTH);
+        panelContents.add(new JLabel(Messages.getString("STR_CONTENTS")), BorderLayout.NORTH);
         textareaContents = new JTextArea();
         textareaContents.setWrapStyleWord(true);
         textareaContents.setLineWrap(true);
@@ -85,6 +85,9 @@ public class AddEntryDialog extends AbstractDialog {
         String[] piNames = PluginManager.getPluginNames();
         for (String piName : piNames) {
             UIHelper.createJMenuItem(piName, pm, al);
+            if (pm.getComponentCount() == 1) {
+                pm.addSeparator();
+            }
         }
         // MouseListener
         final MouseListener ml = new MouseAdapter() {

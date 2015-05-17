@@ -55,9 +55,9 @@ public class PluginManager {
     private static final String pluginShowContents = Messages.getString("MI_SHOW_CONTENTS");
     private static final String pluginHtml2Rtf = Messages.getString("MI_HTML_TO_RTF");
 
-    private static final String[] plugins = new String[]{pluginStripNumbers, pluginRemoveBlanks,
+    private static final String[] plugins = new String[]{pluginShowContents, pluginRemoveBlanks,
         pluginRemoveSemiVowels, pluginTab2Space, pluginUppercase,
-        pluginRemoveCrLf, pluginRemoveSpecials, pluginShowContents,
+        pluginRemoveCrLf, pluginRemoveSpecials, pluginStripNumbers,
         pluginHtml2Rtf};
 
     public static String[] getPluginNames() {

@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2008 - 2013  Thomas Kuenneth
+ * Copyright (C) 2008 - 2015  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -42,12 +42,8 @@ public class Messages {
     public static final String MI_EDITLIST = getString("MI_EDITLIST");
     public static final String MI_GETFROMCLIPBOARD = getString("MI_GETFROMCLIPBOARD");
     public static final String MI_CLIPBOARD = getString("MI_CLIPBOARD");
-    public static final String TITLE_EDIT_ENTRIES = getString("TITLE_EDIT_ENTRIES");
     public static final String TITLE_EDIT_CONTENTS = getString("TITLE_EDIT_CONTENTS");
     public static final String TITLE_NEW_CONTENTS = getString("TITLE_NEW_CONTENTS");
-    public static final String STR_ABOUT = getString("STR_ABOUT");
-    public static final String STR_DESCRIPTION = getString("STR_DESCRIPTION");
-    public static final String STR_CONTENTS = getString("STR_CONTENTS");
     public static final String MI_SETTINGS = getString("MI_SETTINGS");
     public static final String TITLE_SETTINGS = getString("TITLE_SETTINGS");
     public static final String STR_SETTINGS_SNIPPETS_PATH = getString("STR_SETTINGS_SNIPPETS_PATH");

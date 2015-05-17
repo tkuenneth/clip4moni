@@ -54,7 +54,7 @@ public class ShowContentsDialog extends AbstractDialog {
             }
         });
         add(checkboxDecode, BorderLayout.NORTH);
-        checkboxDecode.setSelected(true);
+        checkboxDecode.setSelected(false);
     }
     
     @Override
