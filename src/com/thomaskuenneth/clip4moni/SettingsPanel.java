@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2013  Thomas Kuenneth
+ * Copyright (C) 2013 - 2015  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -34,6 +34,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     public SettingsPanel() {
         initComponents();
         updateSnippetsDir(Helper.getSnippetsDir());
+        updateMacWorkaround();
     }
 
     public String getSnippetsDir() {
@@ -42,6 +43,10 @@ public class SettingsPanel extends javax.swing.JPanel {
 
     public String getLookAndFeel() {
         return ((UIManager.LookAndFeelInfo) comboboxLAFChooser.getSelectedItem()).getClassName();
+    }
+    
+    public boolean isMacOSXWorkaroundActive() {
+        return checkboxMacWorkAround.isSelected();
     }
 
     /**
@@ -58,6 +63,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         labelLAFChooser = new javax.swing.JLabel();
         comboboxLAFChooser = new javax.swing.JComboBox();
         buttonSnippetsDir = new javax.swing.JButton();
+        checkboxMacWorkAround = new javax.swing.JCheckBox();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/thomaskuenneth/clip4moni/Messages"); // NOI18N
         labelSnippetsDir.setText(bundle.getString("STR_SETTINGS_SNIPPETS_PATH")); // NOI18N
@@ -75,6 +81,8 @@ public class SettingsPanel extends javax.swing.JPanel {
             }
         });
 
+        checkboxMacWorkAround.setText(bundle.getString("STR_MAC_WORKAROUND")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -85,11 +93,14 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addComponent(labelSnippetsDir)
                     .addComponent(labelLAFChooser))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(textfieldSnippetsDir)
-                    .addComponent(comboboxLAFChooser, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonSnippetsDir)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(checkboxMacWorkAround)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(textfieldSnippetsDir)
+                            .addComponent(comboboxLAFChooser, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buttonSnippetsDir)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -97,13 +108,15 @@ public class SettingsPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelSnippetsDir)
                     .addComponent(buttonSnippetsDir)
-                    .addComponent(textfieldSnippetsDir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(textfieldSnippetsDir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelSnippetsDir))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelLAFChooser)
                     .addComponent(comboboxLAFChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(checkboxMacWorkAround)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -125,8 +138,14 @@ public class SettingsPanel extends javax.swing.JPanel {
         textfieldSnippetsDir.setText(dir.getAbsolutePath());
     }
     
+    private void updateMacWorkaround() {
+        checkboxMacWorkAround.setEnabled(Helper.isMacOSX());
+        checkboxMacWorkAround.setSelected(Helper.isMacOSXWorkaroundActive());
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonSnippetsDir;
+    private javax.swing.JCheckBox checkboxMacWorkAround;
     private javax.swing.JComboBox comboboxLAFChooser;
     private javax.swing.JLabel labelLAFChooser;
     private javax.swing.JLabel labelSnippetsDir;

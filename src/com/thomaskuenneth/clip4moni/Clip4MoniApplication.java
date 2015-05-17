@@ -217,13 +217,7 @@ public class Clip4MoniApplication implements ActionListener,
             }
         };
         pluginMenu = new Menu(Messages.MI_CLIPBOARD);
-        String[] piNames = PluginManager.getPluginNames();
-        for (String piName : piNames) {
-            UIHelper.createMenuItem(piName, pluginMenu, al);
-            if (pluginMenu.getItemCount() == 1) {
-                pluginMenu.addSeparator();
-            }
-        }
+        PluginManager.populateMenu(pluginMenu, al);
     }
 
     private void updateJPopup() {
@@ -360,6 +354,7 @@ public class Clip4MoniApplication implements ActionListener,
         if (d.showDialog() == JOptionPane.OK_OPTION) {
             Helper.setSnippetsDir(d.getSnippetsDir());
             Helper.storeLookAndFeel(d.getLookAndFeel());
+            Helper.setMacOSXWorkaroundActive(d.isMacOSXWorkaroundActive());
             loadList(Helper.getFileList());
             updateJPopup();
         }

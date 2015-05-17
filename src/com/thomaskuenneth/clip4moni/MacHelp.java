@@ -100,7 +100,7 @@ public class MacHelp {
      * @return the result of the script execution or {@code null}
      */
     private static Object run(String script, String methodName) {
-        if (engine != null) {
+        if ((Helper.isMacOSXWorkaroundActive()) && (engine != null)) {
             try {
                 return engine.eval(script);
             } catch (ScriptException ex) {

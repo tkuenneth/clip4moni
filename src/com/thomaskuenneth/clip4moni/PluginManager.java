@@ -20,6 +20,8 @@
  */
 package com.thomaskuenneth.clip4moni;
 
+import java.awt.Menu;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -62,6 +64,16 @@ public class PluginManager {
 
     public static String[] getPluginNames() {
         return plugins;
+    }
+
+    public static void populateMenu(Menu pm, ActionListener al) {
+        String[] piNames = getPluginNames();
+        for (String piName : piNames) {
+            UIHelper.createMenuItem(piName, pm, al);
+            if (pm.getItemCount()== 1) {
+                pm.addSeparator();
+            }
+        }
     }
 
     /**

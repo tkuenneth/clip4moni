@@ -29,8 +29,6 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 import javax.swing.JTextArea;
 
 /**
@@ -39,7 +37,7 @@ import javax.swing.JTextArea;
  * @author Thomas Kuenneth
  */
 public class UIHelper {
-    
+
     public static final Dimension PREFERRED_SIZE = new JTextArea(20, 40).getPreferredSize();
 
     /**
@@ -87,24 +85,6 @@ public class UIHelper {
     public static MenuItem createMenuItem(String text, Menu menu,
             ActionListener al) {
         MenuItem item = new MenuItem(text);
-        item.addActionListener(al);
-        menu.add(item);
-        return item;
-    }
-
-    /**
-     *
-     * Creates a JMenuItem, adds an ActionListener and adds the item to the
-     * specified JPopupMenu
-     *
-     * @param text text to display
-     * @param menu the menu
-     * @param al an action listener
-     * @return a menu item
-     */
-    public static JMenuItem createJMenuItem(String text, JPopupMenu menu,
-            ActionListener al) {
-        JMenuItem item = new JMenuItem(text);
         item.addActionListener(al);
         menu.add(item);
         return item;

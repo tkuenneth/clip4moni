@@ -21,6 +21,7 @@
 package com.thomaskuenneth.clip4moni;
 
 import java.awt.BorderLayout;
+import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -31,7 +32,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -81,14 +81,9 @@ public class AddEntryDialog extends AbstractDialog {
             }
         };
         // populate plugin menu
-        final JPopupMenu pm = new JPopupMenu();
-        String[] piNames = PluginManager.getPluginNames();
-        for (String piName : piNames) {
-            UIHelper.createJMenuItem(piName, pm, al);
-            if (pm.getComponentCount() == 1) {
-                pm.addSeparator();
-            }
-        }
+        final PopupMenu pm = new PopupMenu();
+        PluginManager.populateMenu(pm, al);
+        add(pm);
         // MouseListener
         final MouseListener ml = new MouseAdapter() {
 

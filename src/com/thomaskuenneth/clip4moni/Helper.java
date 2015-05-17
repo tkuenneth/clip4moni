@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2008 - 2013  Thomas Kuenneth
+ * Copyright (C) 2008 - 2015  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  * This class contains helper methods, which for example provide default
@@ -39,15 +40,17 @@ public class Helper {
     
     private static final String TAG = Helper.class.getName();
     private static final Logger LOGGER = Logger.getLogger(TAG);
-
+    
     private static final String os_name = System.getProperty("os.name");
     private static final String home_dir = System.getProperty("user.home");
     private static final String file_separator = System
             .getProperty("file.separator");
     private static final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
     private static final Dimension screenSize = defaultToolkit.getScreenSize();
+    
     private static final String SNIPPETS_DIR = "SnippetsDir";
     private static final String LOOK_AND_FEEL = "LookAndFeel";
+    private static final String MACOSX_WORKAROUND = "MacOSXWorkaround";
 
     /**
      * Checks if the machine is running a version of Mac OS X
@@ -113,6 +116,26 @@ public class Helper {
         Preferences prefs = getPrefs();
         prefs.put(SNIPPETS_DIR, dir);
     }
+    
+    /**
+     * Returns true if the Mac OS X workaround is active.
+     * 
+     * @return true if the Mac OS X workaround is active
+     */
+    public static boolean isMacOSXWorkaroundActive() {
+        Preferences prefs = getPrefs();
+        return prefs.getBoolean(MACOSX_WORKAROUND, true);
+    }
+    
+    /**
+     * Configures if the Mac OS X workaround is active.
+     * 
+     * @param active 
+     */
+    public static void setMacOSXWorkaroundActive(boolean active) {
+        Preferences prefs = getPrefs();
+        prefs.putBoolean(MACOSX_WORKAROUND, active);
+    }
 
     /**
      * Restores the look and feel from preferences.
@@ -122,12 +145,12 @@ public class Helper {
         String lookAndFeelClassName = prefs.get(LOOK_AND_FEEL, UIManager.getSystemLookAndFeelClassName());
         try {
             UIManager.setLookAndFeel(lookAndFeelClassName);
-        } catch (Throwable tr) {
-            // ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException
+        } catch (ClassNotFoundException | InstantiationException | 
+                IllegalAccessException | UnsupportedLookAndFeelException tr) {
             LOGGER.log(Level.SEVERE, "restoreLookAndFeel", tr);
         }
     }
-    
+
     /**
      * Sets the look and feel and stores its class name in the preferences.
      *
@@ -138,12 +161,12 @@ public class Helper {
         prefs.put(LOOK_AND_FEEL, lookAndFeelClassName);
         try {
             UIManager.setLookAndFeel(lookAndFeelClassName);
-        } catch (Throwable tr) {
-            // ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException
+        } catch (ClassNotFoundException | InstantiationException | 
+                IllegalAccessException | UnsupportedLookAndFeelException tr) {
             LOGGER.log(Level.SEVERE, "storeLookAndFeel", tr);
         }
     }
-
+    
     public static File getFileList() {
         return new File(getSnippetsDir(), Messages.LISTNAME);
     }
