@@ -113,6 +113,8 @@ public class Clip4MoniApplication implements ActionListener,
         String name = (preferredSize.height >= 22) ? ICONFILENAME_22 : ICONFILENAME_16;
         ImageIcon icon = UIHelper.getImageIcon(getClass(), name);
         TrayIcon tray_icon = new TrayIcon(icon.getImage(), Messages.PROGNAME, menu);
+        tray_icon.setActionCommand(Messages.MI_EDITLIST);
+        tray_icon.addActionListener(this);
         try {
             tray.add(tray_icon);
         } catch (AWTException ex) {
