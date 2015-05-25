@@ -36,7 +36,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.UIDefaults;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
@@ -71,7 +71,8 @@ public class AboutView extends JPanel {
             }
             html = MessageFormat.format(html, font.getFamily(), date,
                     System.getProperty("java.version"), System.getProperty("java.vendor"),
-                    System.getProperty("os.name"), System.getProperty("os.version"));
+                    System.getProperty("os.name"), System.getProperty("os.version"),
+                    Integer.toString(Helper.SCREEN_RESOLUTION));
         } catch (ParseException ex) {
             LOGGER.log(Level.SEVERE, "info()", ex);
         }
@@ -93,6 +94,13 @@ public class AboutView extends JPanel {
         pane.setCaretPosition(0);
         pane.setEditable(false);
         pane.setBackground(getBackground());
+        // Workaround for Nimbus
+        UIDefaults defaults = new UIDefaults();
+        defaults.put("EditorPane[Enabled].backgroundPainter", getBackground());
+        pane.putClientProperty("Nimbus.Overrides", defaults);
+        pane.putClientProperty("Nimbus.Overrides.InheritDefaults", true);
+        pane.setBackground(getBackground());
+        // end workaround
         JScrollPane scrollpane = new JScrollPane(pane);
         scrollpane.setBorder(BorderFactory.createEmptyBorder());
         add(scrollpane, BorderLayout.CENTER);

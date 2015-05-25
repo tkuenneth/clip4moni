@@ -38,7 +38,7 @@ import javax.swing.JTextArea;
  */
 public class UIHelper {
 
-    public static final Dimension PREFERRED_SIZE = new JTextArea(20, 40).getPreferredSize();
+    public static final Dimension PREFERRED_SIZE = new JTextArea(20, 55).getPreferredSize();
 
     /**
      * Creates a JButton, sets its text and ActionListener and sets AlignmentX

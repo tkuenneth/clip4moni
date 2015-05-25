@@ -48,6 +48,8 @@ public class Helper {
     private static final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
     private static final Dimension screenSize = defaultToolkit.getScreenSize();
     
+    public static final int SCREEN_RESOLUTION = defaultToolkit.getScreenResolution();
+    
     private static final String SNIPPETS_DIR = "SnippetsDir";
     private static final String LOOK_AND_FEEL = "LookAndFeel";
     private static final String MACOSX_WORKAROUND = "MacOSXWorkaround";
