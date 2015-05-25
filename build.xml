@@ -75,7 +75,7 @@
     <tstamp>
         <format property="now" pattern="yyMMdd"/>
     </tstamp>
-    
+
     <target name="-pre-jar">
         <manifest file="${basedir}/manifest.mf">
             <attribute name="Created-By" value="${application.vendor}"/>
@@ -94,8 +94,9 @@
                     mainclass="com.thomaskuenneth.clip4moni.Clip4Moni" 
                     stubfile="${basedir}/universalJavaApplicationStub"
                     icon="${basedir}/Clip4Moni.icns"
-                    jvmversion="1.7.+"
+                    jvmversion="1.7+"
                     isAgent="true"
+                    useJavaXKey="true"
                     signature="C4M1"
                     bundleid="com.thomaskuenneth.clip4moni">
             

@@ -3,5 +3,5 @@ Ant-Version: Apache Ant 1.9.4
 Created-By: Thomas Kuenneth
 Implementation-Title: Clip4Moni
 Implementation-Vendor: Thomas Kuenneth
-Implementation-Version: 150517
+Implementation-Version: 150525
 
