@@ -30,24 +30,27 @@ public class Messages {
 
     private static final ResourceBundle b = ResourceBundle
             .getBundle("com.thomaskuenneth.clip4moni.Messages");
-    public static final String PROGNAME = getString("PROGNAME");
-    public static final String LISTNAME = "Clip4Moni.list";
-    public static final String BTTN_UP = getString("BTTN_UP");
-    public static final String BTTN_DOWN = getString("BTTN_DOWN");
-    public static final String BTTN_DELETE = getString("BTTN_DELETE");
-    public static final String BTTN_EDIT = getString("BTTN_EDIT");
-    public static final String GETFROMCLIPBOARD = getString("MI_GETFROMCLIPBOARD");
+    
+    // menu items
     public static final String MI_QUIT = getString("MI_QUIT");
     public static final String MI_INFO = getString("MI_INFO");
     public static final String MI_EDITLIST = getString("MI_EDITLIST");
     public static final String MI_GETFROMCLIPBOARD = getString("MI_GETFROMCLIPBOARD");
     public static final String MI_CLIPBOARD = getString("MI_CLIPBOARD");
-    public static final String TITLE_EDIT_CONTENTS = getString("TITLE_EDIT_CONTENTS");
-    public static final String TITLE_NEW_CONTENTS = getString("TITLE_NEW_CONTENTS");
     public static final String MI_SETTINGS = getString("MI_SETTINGS");
-    public static final String TITLE_SETTINGS = getString("TITLE_SETTINGS");
-    public static final String STR_SETTINGS_SNIPPETS_PATH = getString("STR_SETTINGS_SNIPPETS_PATH");
+
+    // buttons
+    public static final String BTTN_UP = getString("BTTN_UP");
+    public static final String BTTN_DOWN = getString("BTTN_DOWN");
+    public static final String BTTN_DELETE = getString("BTTN_DELETE");
+    public static final String BTTN_EDIT = getString("BTTN_EDIT");
     public static final String BTTN_SETTINGS_SNIPPETS_PATH = getString("BTTN_SETTINGS_SNIPPETS_PATH");
+    public static final String BTTN_COPY = getString("BTTN_COPY");
+    
+    // misc.
+    public static final String PROGNAME = getString("PROGNAME");
+    public static final String LISTNAME = "Clip4Moni.list";
+    public static final String GETFROMCLIPBOARD = getString("MI_GETFROMCLIPBOARD");
 
     public static String getString(String key) {
         return b.getString(key);
