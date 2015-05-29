@@ -26,15 +26,17 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Menu;
 import java.awt.MenuItem;
-import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.awt.font.TextAttribute;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
+import javax.swing.UIManager;
 
 /**
  * This class offers ui-related helper methods.
@@ -46,18 +48,23 @@ public class UIHelper {
     public static final Dimension PREFERRED_SIZE = new JTextArea(20, 55).getPreferredSize();
 
     private static final Logger LOGGER = Logger.getLogger(UIHelper.class.getName());
+
     private static final Font MENU_FONT;
 
     static {
-        MENU_FONT = (Font) Toolkit.getDefaultToolkit().getDesktopProperty(
-                "win.menu.font");
-        if (MENU_FONT != null) {
+        Font f = UIManager.getFont("MenuItem.font");
+        if (f != null) {
             LOGGER.log(Level.INFO,
                     MessageFormat.format("{0} ({1})",
-                            MENU_FONT.getFamily(), MENU_FONT.getFontName()));
+                            f.getFamily(), f.getFontName()));
+            Map m = f.getAttributes();
+            m.put(TextAttribute.WEIGHT, TextAttribute.KERNING_ON);
+            m.put(TextAttribute.KERNING, TextAttribute.WEIGHT_REGULAR);
+            f = f.deriveFont(m);
         } else {
             LOGGER.log(Level.INFO, "MENU_FONT is null");
         }
+        MENU_FONT = f;
     }
 
     /**
