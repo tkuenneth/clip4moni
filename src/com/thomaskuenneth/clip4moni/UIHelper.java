@@ -23,10 +23,15 @@ package com.thomaskuenneth.clip4moni;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Menu;
 import java.awt.MenuItem;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.text.MessageFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
@@ -39,6 +44,21 @@ import javax.swing.JTextArea;
 public class UIHelper {
 
     public static final Dimension PREFERRED_SIZE = new JTextArea(20, 55).getPreferredSize();
+
+    private static final Logger LOGGER = Logger.getLogger(UIHelper.class.getName());
+    private static final Font MENU_FONT;
+
+    static {
+        MENU_FONT = (Font) Toolkit.getDefaultToolkit().getDesktopProperty(
+                "win.menu.font");
+        if (MENU_FONT != null) {
+            LOGGER.log(Level.INFO,
+                    MessageFormat.format("{0} ({1})",
+                            MENU_FONT.getFamily(), MENU_FONT.getFontName()));
+        } else {
+            LOGGER.log(Level.INFO, "MENU_FONT is null");
+        }
+    }
 
     /**
      * Creates a JButton, sets its text and ActionListener and sets AlignmentX
@@ -85,8 +105,25 @@ public class UIHelper {
     public static MenuItem createMenuItem(String text, Menu menu,
             ActionListener al) {
         MenuItem item = new MenuItem(text);
+        if (MENU_FONT != null) {
+            item.setFont(MENU_FONT);
+        }
         item.addActionListener(al);
         menu.add(item);
         return item;
+    }
+
+    /**
+     * Creates a menu
+     *
+     * @param title the title
+     * @return the menu
+     */
+    public static Menu createMenu(String title) {
+        Menu menu = new Menu(title);
+        if (MENU_FONT != null) {
+            menu.setFont(MENU_FONT);
+        }
+        return menu;
     }
 }
