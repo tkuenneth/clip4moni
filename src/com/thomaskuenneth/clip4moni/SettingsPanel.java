@@ -127,7 +127,7 @@ public class SettingsPanel extends javax.swing.JPanel {
 
     private void chooseSnippetsDir() {
         JFileChooser jfc = new JFileChooser(textfieldSnippetsDir.getText());
-        jfc.setDialogTitle(Messages.STR_SETTINGS_SNIPPETS_PATH);
+        jfc.setDialogTitle(Messages.getString("STR_SETTINGS_SNIPPETS_PATH"));
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             updateSnippetsDir(jfc.getSelectedFile());

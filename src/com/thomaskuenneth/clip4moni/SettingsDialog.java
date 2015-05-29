@@ -39,7 +39,7 @@ public class SettingsDialog extends AbstractDialog {
 
     @Override
     public String getTitle() {
-        return Messages.TITLE_SETTINGS;
+        return Messages.getString("TITLE_SETTINGS");
     }
 
     @Override
