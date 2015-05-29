@@ -41,12 +41,12 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author Thomas Kuenneth
  */
-public class EditEntriesDialog extends AbstractDialog implements ListSelectionListener {
+public class EditEntriesDialog extends AbstractDialog {
 
     private final DefaultListModel snippets;
-    private final JButton deleteButton, editButton, upButton, downButton;
+    private final JButton deleteButton, editButton, upButton, downButton,
+            buttonCopy;
     private final JList list;
-    private final JPanel editEntriesPanel;
 
     private final ActionListener al = new ActionListener() {
 
@@ -68,31 +68,46 @@ public class EditEntriesDialog extends AbstractDialog implements ListSelectionLi
                 moveEntry(true);
             } else if (cmd.equals(Messages.BTTN_DOWN)) {
                 moveEntry(false);
+            } else if (cmd.equals(Messages.BTTN_COPY)) {
+                Entry entry = (Entry) list.getSelectedValue();
+                if (entry != null) {
+                    Clip4MoniApplication.getInstance().paste(entry.getValue());
+                }
             }
         }
     };
 
+    private final ListSelectionListener lsl = new ListSelectionListener() {
+
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            updateEditEntriesButtons();
+        }
+    };
+
     public EditEntriesDialog(DefaultListModel snippets) {
-        this.snippets = snippets;
-        editEntriesPanel = new JPanel(new BorderLayout());
-        JPanel buttonBox = new JPanel(new GridLayout(4, 1, 4, 4));
-        list = new JList(snippets);
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.setSelectedIndex(0);
-        list.addListSelectionListener(this);
-        JScrollPane sp = new JScrollPane(list);
-        sp.setPreferredSize(UIHelper.PREFERRED_SIZE);
+        // buttons with panels
+        JPanel buttonBox = new JPanel(new GridLayout(5, 1, 4, 4));
         upButton = UIHelper.createButton(buttonBox, Messages.BTTN_UP, al);
         downButton = UIHelper.createButton(buttonBox, Messages.BTTN_DOWN, al);
         editButton = UIHelper.createButton(buttonBox, Messages.BTTN_EDIT, al);
         deleteButton = UIHelper.createButton(buttonBox, Messages.BTTN_DELETE, al);
-        editEntriesPanel.add(sp, BorderLayout.CENTER);
+        buttonCopy = UIHelper.createButton(buttonBox, Messages.BTTN_COPY, al);
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0,
                 0));
         buttonPanel.setBorder(new EmptyBorder(0, 10, 0, 0));
         buttonPanel.add(buttonBox);
-        editEntriesPanel.add(buttonPanel, BorderLayout.EAST);
-        add(editEntriesPanel, BorderLayout.CENTER);
+        // list and scrollpane
+        this.snippets = snippets;
+        list = new JList(snippets);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.addListSelectionListener(lsl);
+        list.setSelectedIndex(0);
+        JScrollPane sp = new JScrollPane(list);
+        sp.setPreferredSize(UIHelper.PREFERRED_SIZE);
+        // putting it all together
+        add(sp, BorderLayout.CENTER);
+        add(buttonPanel, BorderLayout.EAST);
     }
 
     @Override
@@ -109,11 +124,6 @@ public class EditEntriesDialog extends AbstractDialog implements ListSelectionLi
     @Override
     public int getOption() {
         return JOptionPane.OK_OPTION;
-    }
-
-    @Override
-    public void valueChanged(ListSelectionEvent e) {
-        updateEditEntriesButtons();
     }
 
     /*
@@ -139,8 +149,9 @@ public class EditEntriesDialog extends AbstractDialog implements ListSelectionLi
         boolean isOneSelected = (selectedIndex != -1);
         deleteButton.setEnabled(isOneSelected);
         editButton.setEnabled(isOneSelected);
-        upButton.setEnabled(selectedIndex > 0);
+        buttonCopy.setEnabled(isOneSelected);
         downButton.setEnabled(isOneSelected
                 && (selectedIndex < (snippets.size() - 1)));
+        upButton.setEnabled(selectedIndex > 0);
     }
 }
