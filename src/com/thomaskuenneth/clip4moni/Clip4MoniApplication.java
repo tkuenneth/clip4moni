@@ -204,7 +204,7 @@ public class Clip4MoniApplication implements ActionListener,
         systemClipboard.setContents(t, getInstance());
     }
 
-    private void paste(String filename) {
+    public void paste(String filename) {
         File f = FileHelper.createFilename(filename);
         String str = FileHelper.loadFile(f);
         setContents(str);
@@ -218,7 +218,7 @@ public class Clip4MoniApplication implements ActionListener,
                 invokePlugin(cmd);
             }
         };
-        pluginMenu = new Menu(Messages.MI_CLIPBOARD);
+        pluginMenu = UIHelper.createMenu(Messages.MI_CLIPBOARD);
         PluginManager.populateMenu(pluginMenu, al);
     }
 
@@ -261,14 +261,14 @@ public class Clip4MoniApplication implements ActionListener,
     public void editContents(String contents, Entry e) {
         String title = "";
         String name = Long.toString(System.currentTimeMillis());
-        String headline = Messages.TITLE_NEW_CONTENTS;
+        String headline = Messages.getString("TITLE_NEW_CONTENTS");
         if (e != null) {
             title = e.getKey();
             name = e.getValue();
             File f = FileHelper.createFilename(name);
 
             contents = FileHelper.loadFile(f);
-            headline = Messages.TITLE_EDIT_CONTENTS;
+            headline = Messages.getString("TITLE_EDIT_CONTENTS");
         }
         AddEntryDialog addEntryDialog = new AddEntryDialog();
         if (addEntryDialog.showDialog(headline, title, contents) == JOptionPane.OK_OPTION) {
