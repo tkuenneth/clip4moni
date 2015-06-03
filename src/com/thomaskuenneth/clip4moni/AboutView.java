@@ -50,7 +50,7 @@ public class AboutView extends JPanel {
     private static final String CLASS_NAME = AboutView.class.getName();
     private static final Logger LOGGER = Logger.getLogger(CLASS_NAME);
 
-    private static final String URL_INFO = "/com/thomaskuenneth/clip4moni/assets/info.html";
+    private static final String URL_INFO = "/com/thomaskuenneth/clip4moni/assets/info.txt";
 
     public AboutView() {
         super(new BorderLayout());

@@ -46,11 +46,6 @@ public class Messages {
     public static final String BTTN_EDIT = getString("BTTN_EDIT");
     public static final String BTTN_SETTINGS_SNIPPETS_PATH = getString("BTTN_SETTINGS_SNIPPETS_PATH");
     public static final String BTTN_COPY = getString("BTTN_COPY");
-    
-    // misc.
-    public static final String PROGNAME = getString("PROGNAME");
-    public static final String LISTNAME = "Clip4Moni.list";
-    public static final String GETFROMCLIPBOARD = getString("MI_GETFROMCLIPBOARD");
 
     public static String getString(String key) {
         return b.getString(key);

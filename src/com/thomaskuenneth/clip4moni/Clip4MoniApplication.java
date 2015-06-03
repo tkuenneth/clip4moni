@@ -20,6 +20,7 @@
  */
 package com.thomaskuenneth.clip4moni;
 
+import static com.thomaskuenneth.clip4moni.Messages.getString;
 import java.awt.AWTException;
 import java.awt.Dimension;
 import java.awt.Menu;
@@ -101,7 +102,7 @@ public class Clip4MoniApplication implements ActionListener,
         /*
          * build the menu
          */
-        menu = new PopupMenu(Messages.PROGNAME);
+        menu = new PopupMenu(Helper.PROGNAME);
         createPluginMenu();
         updateJPopup();
         /*
@@ -112,7 +113,7 @@ public class Clip4MoniApplication implements ActionListener,
         LOGGER.log(Level.INFO, "tray icon size: {0}x{1} pixels", new Object[]{preferredSize.width, preferredSize.height});
         String name = (preferredSize.height >= 22) ? ICONFILENAME_22 : ICONFILENAME_16;
         ImageIcon icon = UIHelper.getImageIcon(getClass(), name);
-        TrayIcon tray_icon = new TrayIcon(icon.getImage(), Messages.PROGNAME, menu);
+        TrayIcon tray_icon = new TrayIcon(icon.getImage(), Helper.PROGNAME, menu);
         tray_icon.setActionCommand(Messages.MI_EDITLIST);
         tray_icon.addActionListener(this);
         try {
@@ -155,7 +156,7 @@ public class Clip4MoniApplication implements ActionListener,
             @Override
             public void run() {
                 final String name = MacHelp.getFrontmostApp();
-                MacHelp.activateApp(Messages.PROGNAME);
+                MacHelp.activateApp(Helper.PROGNAME);
                 try {
                     Thread.sleep(250);
                 } catch (InterruptedException ex) {
@@ -290,7 +291,9 @@ public class Clip4MoniApplication implements ActionListener,
 
     private void enableMenuEntries(boolean state) {
         for (int i = 0; i < menu.getItemCount(); i++) {
-            menu.getItem(i).setEnabled(state);
+            final MenuItem item = menu.getItem(i);
+            boolean _state = item.getActionCommand().equals(Messages.MI_QUIT) ? true : state;
+            item.setEnabled(_state);
         }
     }
 
@@ -388,10 +391,10 @@ public class Clip4MoniApplication implements ActionListener,
     @Override
     public void actionPerformed(ActionEvent e) {
         String name = MacHelp.getFrontmostApp();
-        MacHelp.activateApp(Messages.PROGNAME);
+        MacHelp.activateApp(Helper.PROGNAME);
         enableMenuEntries(false);
         String cmd = e.getActionCommand();
-        if (Messages.GETFROMCLIPBOARD.equals(cmd)) {
+        if (Messages.MI_GETFROMCLIPBOARD.equals(cmd)) {
             readFromClipboard();
         } else if (Messages.MI_INFO.equals(cmd)) {
             info();
