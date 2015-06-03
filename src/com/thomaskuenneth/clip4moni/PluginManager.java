@@ -69,7 +69,7 @@ public class PluginManager {
     public static void populateMenu(Menu pm, ActionListener al) {
         String[] piNames = getPluginNames();
         for (String piName : piNames) {
-            UIHelper.createMenuItem(piName, pm, al);
+            UIHelper.createMenuItem(piName, pm, al, null);
             if (pm.getItemCount()== 1) {
                 pm.addSeparator();
             }

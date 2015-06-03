@@ -107,15 +107,19 @@ public class UIHelper {
      * @param text text to display
      * @param menu the menu
      * @param al an action listener
+     * @param cmd action command (if null is passed, setActionCommand() is not called)
      * @return a menu item
      */
     public static MenuItem createMenuItem(String text, Menu menu,
-            ActionListener al) {
+            ActionListener al, String cmd) {
         MenuItem item = new MenuItem(text);
         if (MENU_FONT != null) {
             item.setFont(MENU_FONT);
         }
         item.addActionListener(al);
+        if (cmd != null) {
+            item.setActionCommand(cmd);
+        }
         menu.add(item);
         return item;
     }

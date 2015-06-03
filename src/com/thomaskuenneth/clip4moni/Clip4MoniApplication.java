@@ -104,7 +104,7 @@ public class Clip4MoniApplication implements ActionListener,
          */
         menu = new PopupMenu(Helper.PROGNAME);
         createPluginMenu();
-        updateJPopup();
+        updatePopup();
         /*
          * load the icon to be shown in the system try and activate the
          * whole thing
@@ -223,26 +223,23 @@ public class Clip4MoniApplication implements ActionListener,
         PluginManager.populateMenu(pluginMenu, al);
     }
 
-    private void updateJPopup() {
+    private void updatePopup() {
         int num = snippets.size();
-        MenuItem item;
         menu.removeAll();
-        Entry entry;
         for (int i = 0; i < num; i++) {
-            entry = (Entry) snippets.elementAt(i);
-            item = UIHelper.createMenuItem(entry.getKey(), menu, this);
-            item.setActionCommand(entry.getValue());
+            Entry entry = (Entry) snippets.elementAt(i);
+            UIHelper.createMenuItem(entry.getKey(), menu, this, entry.getValue());
         }
         menu.addSeparator();
         menu.add(pluginMenu);
         menu.addSeparator();
-        UIHelper.createMenuItem(Messages.MI_GETFROMCLIPBOARD, menu, this);
-        UIHelper.createMenuItem(Messages.MI_EDITLIST, menu, this);
+        UIHelper.createMenuItem(Messages.MI_GETFROMCLIPBOARD, menu, this, null);
+        UIHelper.createMenuItem(Messages.MI_EDITLIST, menu, this, null);
         menu.addSeparator();
-        UIHelper.createMenuItem(Messages.MI_INFO, menu, this);
-        UIHelper.createMenuItem(Messages.MI_SETTINGS, menu, this);
+        UIHelper.createMenuItem(Messages.MI_INFO, menu, this, null);
+        UIHelper.createMenuItem(Messages.MI_SETTINGS, menu, this, null);
         menu.addSeparator();
-        UIHelper.createMenuItem(Messages.MI_QUIT, menu, this);
+        UIHelper.createMenuItem(Messages.MI_QUIT, menu, this, null);
     }
 
     /**
@@ -255,9 +252,12 @@ public class Clip4MoniApplication implements ActionListener,
     }
 
     /**
-     * create a new entry or edit an existing one; if e is null we create a new
+     * Creates a new entry or edits an existing one; if e is null we create a new
      * one; but if e is not null we read the contents from disc so the contents
      * parameter is ignored
+     * 
+     * @param contents the contents of the entry
+     * @param e existing entry or null
      */
     public void editContents(String contents, Entry e) {
         String title = "";
@@ -267,7 +267,6 @@ public class Clip4MoniApplication implements ActionListener,
             title = e.getKey();
             name = e.getValue();
             File f = FileHelper.createFilename(name);
-
             contents = FileHelper.loadFile(f);
             headline = Messages.getString("TITLE_EDIT_CONTENTS");
         }
@@ -361,7 +360,7 @@ public class Clip4MoniApplication implements ActionListener,
             Helper.storeLookAndFeel(d.getLookAndFeel());
             Helper.setMacOSXWorkaroundActive(d.isMacOSXWorkaroundActive());
             loadList(Helper.getFileList());
-            updateJPopup();
+            updatePopup();
         }
     }
 
@@ -408,7 +407,7 @@ public class Clip4MoniApplication implements ActionListener,
             paste(cmd);
         }
         enableMenuEntries(true);
-        updateJPopup();
+        updatePopup();
         MacHelp.activateApp(name);
     }
 
