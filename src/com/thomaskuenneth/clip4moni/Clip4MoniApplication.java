@@ -129,14 +129,18 @@ public class Clip4MoniApplication implements ActionListener,
 
     /**
      * load the contents of a file into the DefaultListModel snippets
+     *
+     * @param filelist file to load from
      */
     private void loadList(File filelist) {
         snippets.removeAllElements();
         String data = FileHelper.loadFile(filelist);
         String[] list = data.split("\n");
-        for (int i = 0; i < list.length; i++) {
-            String line = list[i].trim();
-            snippets.addElement(new Entry(line));
+        for (String elem : list) {
+            if (elem.length() > 0) {
+                String line = elem.trim();
+                snippets.addElement(new Entry(line));
+            }
         }
     }
 
@@ -228,13 +232,15 @@ public class Clip4MoniApplication implements ActionListener,
     }
 
     private void updatePopup() {
-        int num = snippets.size();
         menu.removeAll();
+        int num = snippets.size();
         for (int i = 0; i < num; i++) {
             Entry entry = (Entry) snippets.elementAt(i);
             UIHelper.createMenuItem(entry.getKey(), menu, this, entry.getValue());
         }
-        menu.addSeparator();
+        if (num > 0) {
+            menu.addSeparator();
+        }
         menu.add(pluginMenu);
         menu.addSeparator();
         UIHelper.createMenuItem(Messages.MI_GETFROMCLIPBOARD, menu, this, null);
@@ -295,6 +301,10 @@ public class Clip4MoniApplication implements ActionListener,
     private void enableMenuEntries(boolean state) {
         for (int i = 0; i < menu.getItemCount(); i++) {
             final MenuItem item = menu.getItem(i);
+            // that's the way AWT creates a separator
+            if (menu.getLabel().startsWith("-")) {
+                continue;
+            }
             boolean _state = item.getActionCommand().equals(Messages.MI_QUIT) ? true : state;
             item.setEnabled(_state);
         }
