@@ -22,6 +22,7 @@ package com.thomaskuenneth.clip4moni;
 
 import java.awt.BorderLayout;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -69,9 +70,12 @@ public class AboutView extends JPanel {
                 Date d = new SimpleDateFormat("yyMMdd").parse(version);
                 date = DateFormat.getDateInstance().format(d);
             }
+            Dimension screenSize = Helper.getScreenSize();
             html = MessageFormat.format(html, font.getFamily(), date,
                     System.getProperty("java.version"), System.getProperty("java.vendor"),
                     System.getProperty("os.name"), System.getProperty("os.version"),
+                    Integer.toString(screenSize.width),
+                    Integer.toString(screenSize.height),
                     Integer.toString(Helper.SCREEN_RESOLUTION));
         } catch (ParseException ex) {
             LOGGER.log(Level.SEVERE, "info()", ex);

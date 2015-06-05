@@ -53,10 +53,11 @@ public class UIHelper {
 
     static {
         Font f = UIManager.getFont("MenuItem.font");
+        // Font f = (Font) Toolkit.getDefaultToolkit().getDesktopProperty("win.menu.font");
         if (f != null) {
             LOGGER.log(Level.INFO,
-                    MessageFormat.format("{0} ({1})",
-                            f.getFamily(), f.getFontName()));
+                    MessageFormat.format("{0} ({1}) {2,number,integer} point",
+                            f.getFamily(), f.getFontName(), f.getSize()));
             Map m = f.getAttributes();
             m.put(TextAttribute.WEIGHT, TextAttribute.KERNING_ON);
             m.put(TextAttribute.KERNING, TextAttribute.WEIGHT_REGULAR);
