@@ -20,7 +20,6 @@
  */
 package com.thomaskuenneth.clip4moni;
 
-import static com.thomaskuenneth.clip4moni.Messages.getString;
 import java.awt.AWTException;
 import java.awt.Dimension;
 import java.awt.Menu;
@@ -53,15 +52,13 @@ public class Clip4MoniApplication implements ActionListener,
 
     private static final Clip4MoniApplication INSTANCE = new Clip4MoniApplication();
 
-    private static final String TAG = Clip4MoniApplication.class.getName();
-    private static final Logger LOGGER = Logger.getLogger(TAG);
+    private static final String CLASSNAME = Clip4MoniApplication.class.getName();
+    private static final Logger LOGGER = Logger.getLogger(CLASSNAME);
 
     private static final String ICONFILENAME_16 = "com/thomaskuenneth/clip4moni/graphics/16x16.png";
     private static final String ICONFILENAME_22 = "com/thomaskuenneth/clip4moni/graphics/17x22.png";
 
     private static final String PROGRAMICON = "com/thomaskuenneth/clip4moni/graphics/logo.png";
-
-    private static final SystemTray tray = SystemTray.getSystemTray();
 
     private Clipboard systemClipboard;
     private DataFlavor plainText;
@@ -92,11 +89,17 @@ public class Clip4MoniApplication implements ActionListener,
         try {
             plainText = new DataFlavor("text/plain");
         } catch (ClassNotFoundException ex) {
-            LOGGER.throwing(TAG, "prepareClipboard()", ex);
+            LOGGER.throwing(CLASSNAME, "prepareClipboard()", ex);
         }
     }
 
     private void createUI() {
+        // is the system tray supported?
+        if (!SystemTray.isSupported()) {
+            LOGGER.log(Level.SEVERE, "system tray not supported");
+            System.exit(1);
+        }
+        final SystemTray tray = SystemTray.getSystemTray();
         snippets = new DefaultListModel();
         loadList(Helper.getFileList());
         /*
@@ -110,7 +113,8 @@ public class Clip4MoniApplication implements ActionListener,
          * whole thing
          */
         Dimension preferredSize = tray.getTrayIconSize();
-        LOGGER.log(Level.INFO, "tray icon size: {0}x{1} pixels", new Object[]{preferredSize.width, preferredSize.height});
+        LOGGER.log(Level.CONFIG, "tray icon size: {0}x{1} pixels", 
+                new Object[]{preferredSize.width, preferredSize.height});
         String name = (preferredSize.height >= 22) ? ICONFILENAME_22 : ICONFILENAME_16;
         ImageIcon icon = UIHelper.getImageIcon(getClass(), name);
         TrayIcon tray_icon = new TrayIcon(icon.getImage(), Helper.PROGNAME, menu);
@@ -119,7 +123,7 @@ public class Clip4MoniApplication implements ActionListener,
         try {
             tray.add(tray_icon);
         } catch (AWTException ex) {
-            LOGGER.throwing(TAG, "createUI", ex);
+            LOGGER.throwing(CLASSNAME, "createUI", ex);
         }
     }
 
@@ -321,13 +325,13 @@ public class Clip4MoniApplication implements ActionListener,
                                 sb.append((char) ch);
                             }
                         } catch (UnsupportedFlavorException | IOException e) {
-                            LOGGER.throwing(TAG, "copyFromClipboard()", e);
+                            LOGGER.throwing(CLASSNAME, "copyFromClipboard()", e);
                         } finally {
                             if (in != null) {
                                 try {
                                     in.close();
                                 } catch (IOException e) {
-                                    LOGGER.throwing(TAG, "copyFromClipboard()", e);
+                                    LOGGER.throwing(CLASSNAME, "copyFromClipboard()", e);
                                 }
                             }
                         }
@@ -336,7 +340,7 @@ public class Clip4MoniApplication implements ActionListener,
                 }
             }
         } catch (IllegalStateException e) {
-            LOGGER.throwing(TAG, "copyFromClipboard()", e);
+            LOGGER.throwing(CLASSNAME, "copyFromClipboard()", e);
         }
         return sb.toString();
     }

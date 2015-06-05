@@ -62,53 +62,58 @@ public class PluginManager {
         pluginRemoveCrLf, pluginRemoveSpecials, pluginStripNumbers,
         pluginHtml2Rtf};
 
-    public static String[] getPluginNames() {
-        return plugins;
-    }
-
+    /**
+     * Populates a given menu with the plugins
+     *
+     * @param pm the menu
+     * @param al action listener
+     */
     public static void populateMenu(Menu pm, ActionListener al) {
-        String[] piNames = getPluginNames();
-        for (String piName : piNames) {
+        for (String piName : plugins) {
             UIHelper.createMenuItem(piName, pm, al, null);
-            if (pm.getItemCount()== 1) {
+            if (pm.getItemCount() == 1) {
                 pm.addSeparator();
             }
         }
     }
 
     /**
-     * If plugins process each line individually, processData() is called.
+     * If plugins process each line individually, we need to call processData().
      *
-     * @param cmd
-     * @param in
-     * @return
+     * @param cmd command to execute
+     * @param in the input string
+     * @return result (what a plugin did with the input string)
      */
     public static String callPlugin(String cmd, String in) {
         if (cmd.equalsIgnoreCase(pluginStripNumbers)) {
             return processData("stripNumbers", in);
         } else if (cmd.equalsIgnoreCase(pluginRemoveBlanks)) {
-            return processData("removeBlanks", in);
+            return removeBlanks(in);
         } else if (cmd.equalsIgnoreCase(pluginRemoveSemiVowels)) {
             return processData("removeSemivowels", in);
         } else if (cmd.equalsIgnoreCase(pluginTab2Space)) {
             return processData("convertTabToSpace", in);
         } else if (cmd.equalsIgnoreCase(pluginUppercase)) {
-            return processData("toUpperCase", in);
+            return toUpperCase(in);
         } else if (cmd.equalsIgnoreCase(pluginHtml2Rtf)) {
-            // need to treat the string as one unit
             return html2Rtf(in);
         } else if (cmd.equalsIgnoreCase(pluginRemoveCrLf)) {
             return processData("removeCrLf", in, false);
         } else if (cmd.equalsIgnoreCase(pluginRemoveSpecials)) {
             return processData("removeSpecials", in, false);
         } else if (cmd.equalsIgnoreCase(pluginShowContents)) {
-            String contents = processData("doNothing", in, false);
-            new ShowContentsDialog(contents).showDialog();
+            new ShowContentsDialog(in).showDialog();
             return in;
         }
         return null;
     }
 
+    /**
+     * Converts an html string to rtf.
+     *
+     * @param html the string containing html
+     * @return the resulting rtf
+     */
     public static String html2Rtf(String html) {
         InputStream is;
         OutputStream os;
@@ -142,10 +147,12 @@ public class PluginManager {
         return null;
     }
 
-    public static String doNothing(String line) {
-        return line;
-    }
-
+    /**
+     * Replaces all occurances of a tab with two blanks.
+     *
+     * @param line string tomodify
+     * @return string with blanks instead of tabs
+     */
     public static String convertTabToSpace(String line) {
         char[] src = {'\t'};
         String[] dst = {"  "};
@@ -163,13 +170,19 @@ public class PluginManager {
                     break;
                 }
             }
-            if (found == false) {
+            if (!found) {
                 result[pos++] = ch;
             }
         }
         return new String(result, 0, pos);
     }
 
+    /**
+     * Converts semi vowels to their alternate representations
+     *
+     * @param line string to convert
+     * @return string with semi vowels removed
+     */
     public static String removeSemivowels(String line) {
         char[] src = {'\u00e4', '\u00c4', '\u00f6', '\u00d6', '\u00fc',
             '\u00dc', '\u00df'};
@@ -195,15 +208,20 @@ public class PluginManager {
         return new String(result, 0, pos);
     }
 
+    /**
+     * Removes all blanks.
+     *
+     * @param line input string
+     * @return string without blanks
+     */
     public static String removeBlanks(String line) {
+        int pos = 0;
         int len = line.length();
         char[] chars = new char[len];
-        line.getChars(0, len, chars, 0);
-        int pos = 0;
         for (int i = 0; i < len; i++) {
-            chars[pos] = chars[i];
-            if (chars[i] != ' ') {
-                pos++;
+            char ch = line.charAt(i);
+            if (ch != ' ') {
+                chars[pos++] = ch;
             }
         }
         return new String(chars, 0, pos);
@@ -234,8 +252,14 @@ public class PluginManager {
         return line;
     }
 
-    public static String toUpperCase(String line) {
-        return line.toUpperCase();
+    /**
+     * Converts a string to uppercase
+     *
+     * @param in a string
+     * @return string with uppercase letters
+     */
+    public static String toUpperCase(String in) {
+        return in.toUpperCase();
     }
 
     public static String removeSpecials(String line) {
