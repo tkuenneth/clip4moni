@@ -107,7 +107,7 @@ public class Clip4MoniApplication implements ActionListener,
          */
         menu = new PopupMenu(Helper.PROGNAME);
         createPluginMenu();
-        updatePopup();
+        populatePopup();
         /*
          * load the icon to be shown in the system try and activate the
          * whole thing
@@ -231,7 +231,10 @@ public class Clip4MoniApplication implements ActionListener,
         PluginManager.populateMenu(pluginMenu, al);
     }
 
-    private void updatePopup() {
+    /**
+     * Populates the main popup menu.
+     */
+    private void populatePopup() {
         menu.removeAll();
         int num = snippets.size();
         for (int i = 0; i < num; i++) {
@@ -253,7 +256,7 @@ public class Clip4MoniApplication implements ActionListener,
     }
 
     /**
-     * this method shows Edit entries dialog
+     * Shows the Edit entries dialog
      */
     private void editList() {
         EditEntriesDialog d = new EditEntriesDialog(snippets);
@@ -298,6 +301,12 @@ public class Clip4MoniApplication implements ActionListener,
         }
     }
 
+    /**
+     * Enables or disables the entries of the popup menu. Quit is always
+     * enabled.
+     *
+     * @param state enabled or disable the entries
+     */
     private void enableMenuEntries(boolean state) {
         for (int i = 0; i < menu.getItemCount(); i++) {
             final MenuItem item = menu.getItem(i);
@@ -356,7 +365,7 @@ public class Clip4MoniApplication implements ActionListener,
     }
 
     /*
-     * show a copyright box
+     * Show a copyright box
      */
     private void info() {
         ImageIcon icon = UIHelper.getImageIcon(getClass(), PROGRAMICON);
@@ -374,12 +383,12 @@ public class Clip4MoniApplication implements ActionListener,
             Helper.storeLookAndFeel(d.getLookAndFeel());
             Helper.setMacOSXWorkaroundActive(d.isMacOSXWorkaroundActive());
             loadList(Helper.getFileList());
-            updatePopup();
+            populatePopup();
         }
     }
 
     /*
-     * quit
+     * Quits the application.
      */
     private void quit() {
         System.exit(0);
@@ -398,10 +407,7 @@ public class Clip4MoniApplication implements ActionListener,
         }
     }
 
-    // --------------
-    // ActionListener
-    // --------------
-    @Override
+    @Override // ActionListener
     public void actionPerformed(ActionEvent e) {
         String name = MacHelp.getFrontmostApp();
         MacHelp.activateApp(Helper.PROGNAME);
@@ -421,14 +427,11 @@ public class Clip4MoniApplication implements ActionListener,
             paste(cmd);
         }
         enableMenuEntries(true);
-        updatePopup();
+        populatePopup();
         MacHelp.activateApp(name);
     }
 
-    // ---------------
-    // ClipboardOwner
-    // ---------------
-    @Override
+    @Override // ClipboardOwner
     public void lostOwnership(Clipboard clipboard, Transferable contents) {
         LOGGER.info(contents.toString());
     }
