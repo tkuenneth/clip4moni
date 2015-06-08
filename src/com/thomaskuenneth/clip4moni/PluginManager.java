@@ -46,21 +46,22 @@ public class PluginManager {
     private static final String PAR = "##PA_R##";
     private static final String LINE = "##LINE_##";
 
-    private static final String pluginStripNumbers = Messages.getString("MI_STRIP_NUMBERS");
-    private static final String pluginRemoveBlanks = Messages.getString("MI_REMOVE_BLANKS");
-    private static final String pluginRemoveSemiVowels = Messages
+    private static final String MI_STRIP_NUMBERS = Messages.getString("MI_STRIP_NUMBERS");
+    private static final String MI_REMOVE_BLANKS = Messages.getString("MI_REMOVE_BLANKS");
+    private static final String MI_REMOVE_SEMIVOWELS = Messages
             .getString("MI_REMOVE_SEMIVOWELS");
-    private static final String pluginTab2Space = Messages.getString("MI_TAB_TO_SPACE");
-    private static final String pluginUppercase = Messages.getString("MI_UPPERCASE");
-    private static final String pluginRemoveCrLf = Messages.getString("MI_REMOVE_CRLF");
-    private static final String pluginRemoveSpecials = Messages.getString("MI_REMOVE_SPECIALS");
-    private static final String pluginShowContents = Messages.getString("MI_SHOW_CONTENTS");
-    private static final String pluginHtml2Rtf = Messages.getString("MI_HTML_TO_RTF");
+    private static final String MI_TAB_TO_SPACE = Messages.getString("MI_TAB_TO_SPACE");
+    private static final String MI_UPPERCASE = Messages.getString("MI_UPPERCASE");
+    private static final String MI_REMOVE_CRLF = Messages.getString("MI_REMOVE_CRLF");
+    private static final String MI_REMOVE_SPECIALS = Messages.getString("MI_REMOVE_SPECIALS");
+    private static final String MI_SHOW_CONTENTS = Messages.getString("MI_SHOW_CONTENTS");
+    private static final String MI_HTML_TO_RTF = Messages.getString("MI_HTML_TO_RTF");
+    private static final String MI_QUOTE = Messages.getString("MI_QUOTE");
 
-    private static final String[] plugins = new String[]{pluginShowContents, pluginRemoveBlanks,
-        pluginRemoveSemiVowels, pluginTab2Space, pluginUppercase,
-        pluginRemoveCrLf, pluginRemoveSpecials, pluginStripNumbers,
-        pluginHtml2Rtf};
+    private static final String[] plugins = new String[]{MI_SHOW_CONTENTS, MI_REMOVE_BLANKS,
+        MI_REMOVE_SEMIVOWELS, MI_TAB_TO_SPACE, MI_UPPERCASE,
+        MI_REMOVE_CRLF, MI_REMOVE_SPECIALS, MI_STRIP_NUMBERS,
+        MI_HTML_TO_RTF, MI_QUOTE};
 
     /**
      * Populates a given menu with the plugins
@@ -85,27 +86,58 @@ public class PluginManager {
      * @return result (what a plugin did with the input string)
      */
     public static String callPlugin(String cmd, String in) {
-        if (cmd.equalsIgnoreCase(pluginStripNumbers)) {
+        if (cmd.equalsIgnoreCase(MI_STRIP_NUMBERS)) {
             return processData("stripNumbers", in);
-        } else if (cmd.equalsIgnoreCase(pluginRemoveBlanks)) {
+        } else if (cmd.equalsIgnoreCase(MI_REMOVE_BLANKS)) {
             return removeBlanks(in);
-        } else if (cmd.equalsIgnoreCase(pluginRemoveSemiVowels)) {
+        } else if (cmd.equalsIgnoreCase(MI_REMOVE_SEMIVOWELS)) {
             return processData("removeSemivowels", in);
-        } else if (cmd.equalsIgnoreCase(pluginTab2Space)) {
+        } else if (cmd.equalsIgnoreCase(MI_TAB_TO_SPACE)) {
             return processData("convertTabToSpace", in);
-        } else if (cmd.equalsIgnoreCase(pluginUppercase)) {
+        } else if (cmd.equalsIgnoreCase(MI_UPPERCASE)) {
             return toUpperCase(in);
-        } else if (cmd.equalsIgnoreCase(pluginHtml2Rtf)) {
+        } else if (cmd.equalsIgnoreCase(MI_HTML_TO_RTF)) {
             return html2Rtf(in);
-        } else if (cmd.equalsIgnoreCase(pluginRemoveCrLf)) {
+        } else if (cmd.equalsIgnoreCase(MI_REMOVE_CRLF)) {
             return processData("removeCrLf", in, false);
-        } else if (cmd.equalsIgnoreCase(pluginRemoveSpecials)) {
+        } else if (cmd.equalsIgnoreCase(MI_REMOVE_SPECIALS)) {
             return processData("removeSpecials", in, false);
-        } else if (cmd.equalsIgnoreCase(pluginShowContents)) {
+        } else if (cmd.equalsIgnoreCase(MI_SHOW_CONTENTS)) {
             new ShowContentsDialog(in).showDialog();
             return in;
+        } else if (cmd.equalsIgnoreCase(MI_QUOTE)) {
+            return quote(in);
         }
         return null;
+    }
+
+    /**
+     * Formats a string so that it can be used as a quote in emails.
+     *
+     * @param in string to quote
+     * @return string properly formatted for quoting
+     */
+    public static String quote(String in) {
+        StringBuilder result = new StringBuilder();
+        StringBuilder line = new StringBuilder();
+        String [] words = in.split("\\s+");
+        for (String w : words) {
+            if ((line.length() + w.length()) >= 40) {
+                result.append(line.toString());
+                result.append("\n");
+                line.setLength(0);
+            }
+            if (line.length() == 0) {
+                line.append("> ");
+            } else {
+                line.append(" ");
+            }
+            line.append(w);
+        }
+        if (line.length() > 0) {
+            result.append(line.toString());
+        }
+        return result.toString().trim();
     }
 
     /**
@@ -317,12 +349,13 @@ public class PluginManager {
                 sb.append(line);
             }
         } catch (IOException e) {
+            LOGGER.throwing(CLASSNAME, "processData", e);
         }
         if (br != null) {
             try {
                 br.close();
             } catch (IOException e) {
-                // intentionally no logging
+                LOGGER.throwing(CLASSNAME, "processData", e);
             }
         }
         if (sr != null) {
