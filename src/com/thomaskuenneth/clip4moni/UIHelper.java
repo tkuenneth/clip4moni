@@ -52,8 +52,14 @@ public class UIHelper {
     private static final Font MENU_FONT;
 
     static {
-        Font f = UIManager.getFont("MenuItem.font");
-        // Font f = (Font) Toolkit.getDefaultToolkit().getDesktopProperty("win.menu.font");
+        MENU_FONT = configureFont("MenuItem.font");
+        configureFont("Button.font");
+        configureFont("TextArea.font");
+        configureFont("Label.font");
+    }
+    
+    private static Font configureFont(String fontname) {
+        Font f = UIManager.getFont(fontname);
         if (f != null) {
             LOGGER.log(Level.INFO,
                     MessageFormat.format("{0} ({1}) {2,number,integer} point",
@@ -65,7 +71,8 @@ public class UIHelper {
         } else {
             LOGGER.log(Level.INFO, "MENU_FONT is null");
         }
-        MENU_FONT = f;
+        UIManager.getDefaults().put(fontname, f);
+        return f;
     }
 
     /**
