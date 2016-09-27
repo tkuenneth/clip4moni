@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2008 - 2015  Thomas Kuenneth
+ * Copyright (C) 2008 - 2016  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -74,13 +74,10 @@ public class Clip4MoniApplication implements ActionListener,
     }
 
     public static void launch() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                Helper.restoreLookAndFeel();
-                INSTANCE.prepareClipboard();
-                INSTANCE.createUI();
-            }
+        SwingUtilities.invokeLater(() -> {
+            Helper.restoreLookAndFeel();
+            INSTANCE.prepareClipboard();
+            INSTANCE.createUI();
         });
     }
 
@@ -113,7 +110,7 @@ public class Clip4MoniApplication implements ActionListener,
          * whole thing
          */
         Dimension preferredSize = tray.getTrayIconSize();
-        LOGGER.log(Level.CONFIG, "tray icon size: {0}x{1} pixels", 
+        LOGGER.log(Level.CONFIG, "tray icon size: {0}x{1} pixels",
                 new Object[]{preferredSize.width, preferredSize.height});
         String name = (preferredSize.height >= 22) ? ICONFILENAME_22 : ICONFILENAME_16;
         ImageIcon icon = UIHelper.getImageIcon(getClass(), name);
@@ -139,7 +136,7 @@ public class Clip4MoniApplication implements ActionListener,
         for (String elem : list) {
             if (elem.length() > 0) {
                 String line = elem.trim();
-                snippets.addElement(new Entry(line));
+                snippets.addElement(Entry.createEntry(line));
             }
         }
     }
@@ -160,24 +157,18 @@ public class Clip4MoniApplication implements ActionListener,
     }
 
     private void invokePlugin(final String cmd) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final String name = MacHelp.getFrontmostApp();
-                MacHelp.activateApp(Helper.PROGNAME);
-                try {
-                    Thread.sleep(250);
-                } catch (InterruptedException ex) {
-                }
-                final String text = PluginManager.callPlugin(cmd, copyFromClipboard());
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        setContents(text);
-                        MacHelp.activateApp(name);
-                    }
-                });
+        new Thread(() -> {
+            final String name = MacHelp.getFrontmostApp();
+            MacHelp.activateApp(Helper.PROGNAME);
+            try {
+                Thread.sleep(250);
+            } catch (InterruptedException ex) {
             }
+            final String text = PluginManager.callPlugin(cmd, copyFromClipboard());
+            SwingUtilities.invokeLater(() -> {
+                setContents(text);
+                MacHelp.activateApp(name);
+            });
         }).start();
     }
 
@@ -220,12 +211,9 @@ public class Clip4MoniApplication implements ActionListener,
     }
 
     private void createPluginMenu() {
-        final ActionListener al = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String cmd = e.getActionCommand();
-                invokePlugin(cmd);
-            }
+        final ActionListener al = (ActionEvent e) -> {
+            String cmd = e.getActionCommand();
+            invokePlugin(cmd);
         };
         pluginMenu = UIHelper.createMenu(Messages.MI_CLIPBOARD);
         PluginManager.populateMenu(pluginMenu, al);
@@ -265,10 +253,10 @@ public class Clip4MoniApplication implements ActionListener,
     }
 
     /**
-     * Creates a new entry or edits an existing one; if e is null we create a new
-     * one; but if e is not null we read the contents from disc so the contents
-     * parameter is ignored
-     * 
+     * Creates a new entry or edits an existing one; if e is null we create a
+     * new one; but if e is not null we read the contents from disc so the
+     * contents parameter is ignored
+     *
      * @param contents the contents of the entry
      * @param e existing entry or null
      */

@@ -22,46 +22,50 @@ package com.thomaskuenneth.clip4moni;
 
 public class Entry {
 
-	private String key, value;
+    private String key, value;
 
-	public Entry(String all) {
-		setAll(all);
-	}
+    public Entry() {
+    }
 
-	public Entry(String key, String value) {
-		this.key = key;
-		this.value = value;
-	}
+    public Entry(String key, String value) {
+        this.key = key;
+        this.value = value;
+    }
+    
+    public static Entry createEntry(String all) {
+        Entry e = new Entry();
+        e.setAll(all);
+        return e;
+    }
 
-	public void setAll(String all) {
-		int pos = all.indexOf('|');
+    public void setAll(String all) {
+        int pos = all.indexOf('|');
+        if (pos > 0) {
+            int len = Integer.parseInt(all.substring(0, pos));
+            pos += 1;
+            setKey(all.substring(pos, pos + len));
+            value = all.substring(pos + len + 1);
+        }
+    }
 
-                if (pos > 0) {
-			int len = Integer.parseInt(all.substring(0, pos));
-			pos += 1;
-			setKey(all.substring(pos, pos + len));
-			value = all.substring(pos + len + 1);
-		}
-	}
+    public String getAll() {
+        return Integer.toString(key.length()) + '|' + key + '|' + value;
+    }
 
-	public String getAll() {
-		return Integer.toString(key.length()) + '|' + key + '|' + value;
-	}
+    public void setKey(String key) {
+        this.key = key;
+    }
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+    public String getKey() {
+        return key;
+    }
 
-	public String getKey() {
-		return key;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	public String getValue() {
-		return value;
-	}
-
-        @Override
-	public String toString() {
-		return getKey();
-	}
+    @Override
+    public String toString() {
+        return getKey();
+    }
 }
