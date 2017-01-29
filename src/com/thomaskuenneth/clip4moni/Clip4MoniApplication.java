@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2008 - 2016  Thomas Kuenneth
+ * Copyright (C) 2008 - 2017  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -62,7 +62,7 @@ public class Clip4MoniApplication implements ActionListener,
 
     private Clipboard systemClipboard;
     private DataFlavor plainText;
-    private DefaultListModel snippets;
+    private DefaultListModel<Entry> snippets;
     private PopupMenu menu;
     private Menu pluginMenu;
 
@@ -97,7 +97,7 @@ public class Clip4MoniApplication implements ActionListener,
             System.exit(1);
         }
         final SystemTray tray = SystemTray.getSystemTray();
-        snippets = new DefaultListModel();
+        snippets = new DefaultListModel<>();
         loadList(Helper.getFileList());
         /*
          * build the menu
@@ -151,7 +151,7 @@ public class Clip4MoniApplication implements ActionListener,
             if (i > 0) {
                 sb.append('\n');
             }
-            sb.append(((Entry) snippets.elementAt(i)).getAll());
+            sb.append((snippets.elementAt(i)).getAll());
         }
         FileHelper.saveFile(filelist, sb.toString());
     }
@@ -226,7 +226,7 @@ public class Clip4MoniApplication implements ActionListener,
         menu.removeAll();
         int num = snippets.size();
         for (int i = 0; i < num; i++) {
-            Entry entry = (Entry) snippets.elementAt(i);
+            Entry entry = snippets.elementAt(i);
             UIHelper.createMenuItem(entry.getKey(), menu, this, entry.getValue());
         }
         if (num > 0) {
@@ -389,10 +389,11 @@ public class Clip4MoniApplication implements ActionListener,
      */
     public void deleteEntry(Entry e) {
         File f = FileHelper.createFilename(e.getValue());
-        if (f.delete()) {
-            snippets.removeElement(e);
-            saveList(Helper.getFileList());
+        if (!f.delete()) {
+            LOGGER.log(Level.SEVERE, String.format("%s not found", f.getAbsolutePath()));
         }
+        snippets.removeElement(e);
+        saveList(Helper.getFileList());
     }
 
     @Override // ActionListener

@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2013 - 2015  Thomas Kuenneth
+ * Copyright (C) 2013 - 2017  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -23,7 +23,6 @@ package com.thomaskuenneth.clip4moni;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -43,24 +42,21 @@ import javax.swing.event.ListSelectionListener;
  */
 public class EditEntriesDialog extends AbstractDialog {
 
-    private final DefaultListModel snippets;
-    private final JButton deleteButton, editButton, upButton, downButton,
+    private DefaultListModel snippets;
+    private JButton deleteButton, editButton, upButton, downButton,
             buttonCopy;
-    private final JList list;
+    private JList<Entry> list;
 
-    private final ActionListener al = new ActionListener() {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
+    private final ActionListener al = ((e) -> {
             String cmd = e.getActionCommand();
             if (cmd.equals(Messages.BTTN_DELETE)) {
-                Entry entry = (Entry) list.getSelectedValue();
+                Entry entry = list.getSelectedValue();
                 if (entry != null) {
                     Clip4MoniApplication.getInstance().deleteEntry(entry);
                 }
                 updateEditEntriesButtons();
             } else if (cmd.equals(Messages.BTTN_EDIT)) {
-                Entry entry = (Entry) list.getSelectedValue();
+                Entry entry = list.getSelectedValue();
                 if (entry != null) {
                     Clip4MoniApplication.getInstance().editContents(null, entry);
                 }
@@ -69,23 +65,22 @@ public class EditEntriesDialog extends AbstractDialog {
             } else if (cmd.equals(Messages.BTTN_DOWN)) {
                 moveEntry(false);
             } else if (cmd.equals(Messages.BTTN_COPY)) {
-                Entry entry = (Entry) list.getSelectedValue();
+                Entry entry = list.getSelectedValue();
                 if (entry != null) {
                     Clip4MoniApplication.getInstance().paste(entry.getValue());
                 }
             }
-        }
-    };
+    });
 
-    private final ListSelectionListener lsl = new ListSelectionListener() {
-
-        @Override
-        public void valueChanged(ListSelectionEvent e) {
-            updateEditEntriesButtons();
-        }
+    private final ListSelectionListener lsl = (ListSelectionEvent e) -> {
+        updateEditEntriesButtons();
     };
 
     public EditEntriesDialog(DefaultListModel snippets) {
+        createUI(snippets);
+    }
+
+    private void createUI(DefaultListModel listModel) {
         // buttons with panels
         JPanel buttonBox = new JPanel(new GridLayout(5, 1, 4, 4));
         upButton = UIHelper.createButton(buttonBox, Messages.BTTN_UP, al);
@@ -98,8 +93,8 @@ public class EditEntriesDialog extends AbstractDialog {
         buttonPanel.setBorder(new EmptyBorder(0, 10, 0, 0));
         buttonPanel.add(buttonBox);
         // list and scrollpane
-        this.snippets = snippets;
-        list = new JList(snippets);
+        this.snippets = listModel;
+        list = new JList(listModel);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.addListSelectionListener(lsl);
         list.setSelectedIndex(0);

@@ -1,4 +1,7 @@
-/nbproject/private/
-/build/
-/dist/
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
 /Clip4Moni.app/

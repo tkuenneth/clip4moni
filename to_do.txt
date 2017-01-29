@@ -1,1 +1,0 @@
-- would be nice if rtf snippets could bei read from the clipboard without loosing format
