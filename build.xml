@@ -8,6 +8,7 @@
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
 <project name="Clip4Moni" default="default" basedir=".">
+    
     <description>Builds, tests, and runs the project Clip4Moni.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
@@ -77,42 +78,9 @@
     </tstamp>
 
     <target name="-pre-jar">
-        <manifest file="${basedir}/manifest.mf">
-            <attribute name="Created-By" value="${application.vendor}"/>
-            <attribute name="Implementation-Title" value="${application.title}"/>
-            <attribute name="Implementation-Vendor" value="${application.vendor}"/>
-            <attribute name="Implementation-Version" value="${now}"/>
-        </manifest>
     </target>
     
     <target name="-post-jar">
-        
-        <!--        <copy file="${dist.jar}" todir="${basedir}/Clip4Moni.app/Contents/Resources/Java" /> -->
-   
-        <!--     
-        <jarbundler dir="${basedir}"
-                    name="Clip4Moni"
-                    mainclass="com.thomaskuenneth.clip4moni.Clip4Moni" 
-                    stubfile="${basedir}/universalJavaApplicationStub"
-                    icon="${basedir}/Clip4Moni.icns"
-                    jvmversion="1.8+"
-                    isAgent="true"
-                    useJavaXKey="true"
-                    signature="C4M1"
-                    bundleid="com.thomaskuenneth.clip4moni">
-            
-            <jarfileset dir="${basedir}/dist">
-                <include name="**/*.jar" />
-            </jarfileset>
-                
-        </jarbundler>
-
-        -->        
     </target>
-
-    <!--    
-    <taskdef name="jarbundler" 
-             classname="net.sourceforge.jarbundler.JarBundler" />
-    -->
     
 </project>

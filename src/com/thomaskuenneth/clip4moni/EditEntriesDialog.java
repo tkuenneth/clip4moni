@@ -42,7 +42,7 @@ import javax.swing.event.ListSelectionListener;
  */
 public class EditEntriesDialog extends AbstractDialog {
 
-    private DefaultListModel snippets;
+    private DefaultListModel<Entry> snippets;
     private JButton deleteButton, editButton, upButton, downButton,
             buttonCopy;
     private JList<Entry> list;
@@ -76,11 +76,11 @@ public class EditEntriesDialog extends AbstractDialog {
         updateEditEntriesButtons();
     };
 
-    public EditEntriesDialog(DefaultListModel snippets) {
+    public EditEntriesDialog(DefaultListModel<Entry> snippets) {
         createUI(snippets);
     }
 
-    private void createUI(DefaultListModel listModel) {
+    private void createUI(DefaultListModel<Entry> listModel) {
         // buttons with panels
         JPanel buttonBox = new JPanel(new GridLayout(5, 1, 4, 4));
         upButton = UIHelper.createButton(buttonBox, Messages.BTTN_UP, al);
@@ -94,7 +94,7 @@ public class EditEntriesDialog extends AbstractDialog {
         buttonPanel.add(buttonBox);
         // list and scrollpane
         this.snippets = listModel;
-        list = new JList(listModel);
+        list = new JList<>(listModel);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.addListSelectionListener(lsl);
         list.setSelectedIndex(0);
@@ -128,7 +128,7 @@ public class EditEntriesDialog extends AbstractDialog {
         int index = list.getSelectedIndex();
         int newIndex = index + (moveUp ? -1 : 1);
         if (index >= 0) {
-            Entry entry = (Entry) snippets.getElementAt(index);
+            Entry entry = snippets.getElementAt(index);
             snippets.remove(index);
             snippets.insertElementAt(entry, newIndex);
             updateEditEntriesButtons();

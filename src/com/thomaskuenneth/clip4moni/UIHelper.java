@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2008 - 2015  Thomas Kuenneth
+ * Copyright (C) 2008 - 2017  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -30,6 +30,7 @@ import java.awt.event.ActionListener;
 import java.awt.font.TextAttribute;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,10 +65,10 @@ public class UIHelper {
             LOGGER.log(Level.INFO,
                     MessageFormat.format("{0} ({1}) {2,number,integer} point",
                             f.getFamily(), f.getFontName(), f.getSize()));
-            Map m = f.getAttributes();
-            m.put(TextAttribute.WEIGHT, TextAttribute.KERNING_ON);
-            m.put(TextAttribute.KERNING, TextAttribute.WEIGHT_REGULAR);
-            f = f.deriveFont(m);
+            Map<TextAttribute, Object> attributes = new HashMap<>();
+            attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_REGULAR);
+            attributes.put(TextAttribute.KERNING, TextAttribute.KERNING_ON);
+            f = f.deriveFont(attributes);
         } else {
             LOGGER.log(Level.INFO, "MENU_FONT is null");
         }

@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2008 - 2015  Thomas Kuenneth
+ * Copyright (C) 2008 - 2017  Thomas Kuenneth
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -58,7 +58,7 @@ public class PluginManager {
     private static final String MI_HTML_TO_RTF = Messages.getString("MI_HTML_TO_RTF");
     private static final String MI_QUOTE = Messages.getString("MI_QUOTE");
 
-    private static final String[] plugins = new String[]{MI_SHOW_CONTENTS, MI_REMOVE_BLANKS,
+    private static final String[] PLUGINS = new String[]{MI_SHOW_CONTENTS, MI_REMOVE_BLANKS,
         MI_REMOVE_SEMIVOWELS, MI_TAB_TO_SPACE, MI_UPPERCASE,
         MI_REMOVE_CRLF, MI_REMOVE_SPECIALS, MI_STRIP_NUMBERS,
         MI_HTML_TO_RTF, MI_QUOTE};
@@ -70,7 +70,7 @@ public class PluginManager {
      * @param al action listener
      */
     public static void populateMenu(Menu pm, ActionListener al) {
-        for (String piName : plugins) {
+        for (String piName : PLUGINS) {
             UIHelper.createMenuItem(piName, pm, al, null);
             if (pm.getItemCount() == 1) {
                 pm.addSeparator();
@@ -313,8 +313,8 @@ public class PluginManager {
 
     private static String call(String method, String line) {
         try {
-            Class c = ClassLoader.getSystemClassLoader().loadClass(CLASSNAME);
-            Class[] signature = new Class[]{String.class};
+            Class<?> c = ClassLoader.getSystemClassLoader().loadClass(CLASSNAME);
+            Class<?>[] signature = new Class[]{String.class};
             Method m = c.getMethod(method, signature);
             return (String) m.invoke(null, line);
         } catch (ClassNotFoundException | NoSuchMethodException |

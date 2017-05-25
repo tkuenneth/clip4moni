@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2013  Thomas Kuenneth
+ * Copyright (C) 2013 - 2017  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -30,7 +30,7 @@ import javax.swing.UIManager;
  *
  * @author Thomas Kuenneth
  */
-public class LAFComboboxModel extends DefaultComboBoxModel {
+public class LAFComboboxModel extends DefaultComboBoxModel<UIManager.LookAndFeelInfo> {
 
     public LAFComboboxModel() {
         LookAndFeel current = UIManager.getLookAndFeel();

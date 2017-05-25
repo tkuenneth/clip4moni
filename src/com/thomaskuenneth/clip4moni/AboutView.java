@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2015  Thomas Kuenneth
+ * Copyright (C) 2015 - 2017  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -26,12 +26,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.DateFormat;
 import java.text.MessageFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
@@ -39,7 +34,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.UIDefaults;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 
 /**
  * This class displays program and copyright information
@@ -64,34 +58,24 @@ public class AboutView extends JPanel {
         Font font = pane.getFont();
         String html = FileUtilities.getResourceAsString(getClass(), URL_INFO);
         String version = getClass().getPackage().getImplementationVersion();
-        try {
-            String date = StringUtils.UNKNOWN;
-            if (version != null) {
-                Date d = new SimpleDateFormat("yyMMdd").parse(version);
-                date = DateFormat.getDateInstance().format(d);
-            }
-            Dimension screenSize = Helper.getScreenSize();
-            html = MessageFormat.format(html, font.getFamily(), date,
-                    System.getProperty("java.version"), System.getProperty("java.vendor"),
-                    System.getProperty("os.name"), System.getProperty("os.version"),
-                    Integer.toString(screenSize.width),
-                    Integer.toString(screenSize.height),
-                    Integer.toString(Helper.SCREEN_RESOLUTION));
-        } catch (ParseException ex) {
-            LOGGER.log(Level.SEVERE, "info()", ex);
+        if (version == null) {
+            version = StringUtils.UNKNOWN;
         }
+        Dimension screenSize = Helper.getScreenSize();
+        html = MessageFormat.format(html, font.getFamily(), version,
+                System.getProperty("java.version"), System.getProperty("java.vendor"),
+                System.getProperty("os.name"), System.getProperty("os.version"),
+                Integer.toString(screenSize.width),
+                Integer.toString(screenSize.height),
+                Integer.toString(Helper.SCREEN_RESOLUTION));
         pane.setContentType("text/html");
         pane.setText(html);
-        pane.addHyperlinkListener(new HyperlinkListener() {
-
-            @Override
-            public void hyperlinkUpdate(HyperlinkEvent e) {
-                if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
-                    try {
-                        Desktop.getDesktop().browse(e.getURL().toURI());
-                    } catch (IOException | URISyntaxException ex) {
-                        LOGGER.throwing(CLASS_NAME, "hyperlinkUpdate", ex);
-                    }
+        pane.addHyperlinkListener((HyperlinkEvent e) -> {
+            if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+                try {
+                    Desktop.getDesktop().browse(e.getURL().toURI());
+                } catch (IOException | URISyntaxException ex) {
+                    LOGGER.throwing(CLASS_NAME, "hyperlinkUpdate", ex);
                 }
             }
         });
