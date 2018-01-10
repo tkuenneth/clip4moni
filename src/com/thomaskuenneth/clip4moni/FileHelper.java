@@ -79,33 +79,37 @@ public class FileHelper {
      * @return the contents of the file as a string
      */
     public static String loadFile(File f) {
-        int len = (int) f.length();
-        byte[] buf = new byte[len];
-        FileInputStream fin = null;
-        try {
-            fin = new FileInputStream(f);
-            fin.read(buf);
-        } catch (IOException e) {
-            LOGGER.throwing(TAG, "loadFile", e);
-        } finally {
-            if (fin != null) {
-                try {
-                    fin.close();
-                } catch (IOException e) {
-                    LOGGER.throwing(TAG, "loadFile", e);
+        String result = null;
+        if (f != null) {
+            int len = (int) f.length();
+            byte[] buf = new byte[len];
+            FileInputStream fin = null;
+            try {
+                fin = new FileInputStream(f);
+                fin.read(buf);
+            } catch (IOException e) {
+                LOGGER.throwing(TAG, "loadFile", e);
+            } finally {
+                if (fin != null) {
+                    try {
+                        fin.close();
+                    } catch (IOException e) {
+                        LOGGER.throwing(TAG, "loadFile", e);
+                    }
                 }
             }
-        }
-        if (len > 4) {
-            if (Arrays.equals(MAGIC, Arrays.copyOfRange(buf, 0, 4))) {
-                try {
-                    return new String(buf, 4, len - 4, UTF8);
-                } catch (UnsupportedEncodingException e) {
-                    LOGGER.throwing(TAG, "loadFile", e);
+            if (len > 4) {
+                if (Arrays.equals(MAGIC, Arrays.copyOfRange(buf, 0, 4))) {
+                    try {
+                        return new String(buf, 4, len - 4, UTF8);
+                    } catch (UnsupportedEncodingException e) {
+                        LOGGER.throwing(TAG, "loadFile", e);
+                    }
                 }
             }
+            result = new String(buf);
         }
-        return new String(buf);
+        return result;
     }
 
     /**
@@ -115,6 +119,9 @@ public class FileHelper {
      * @return instance of File
      */
     public static File createFilename(String name) {
-        return new File(Helper.getSnippetsDir(), name);
+        if (name != null) {
+            return new File(Helper.getSnippetsDir(), name);
+        }
+        return null;
     }
 }

@@ -173,35 +173,37 @@ public class Clip4MoniApplication implements ActionListener,
     }
 
     private void setContents(final String text) {
-        Transferable t;
-        if (text.startsWith("{\\rtf1")) {
-            t = new Transferable() {
+        if (text != null) {
+            Transferable t;
+            if (text.startsWith("{\\rtf1")) {
+                t = new Transferable() {
 
-                @Override
-                public DataFlavor[] getTransferDataFlavors() {
-                    try {
-                        return new DataFlavor[]{new DataFlavor("text/rtf")};
-                    } catch (ClassNotFoundException ex) {
-                        LOGGER.log(Level.SEVERE, "setContents()", ex);
+                    @Override
+                    public DataFlavor[] getTransferDataFlavors() {
+                        try {
+                            return new DataFlavor[]{new DataFlavor("text/rtf")};
+                        } catch (ClassNotFoundException ex) {
+                            LOGGER.log(Level.SEVERE, "setContents()", ex);
+                        }
+                        return null;
                     }
-                    return null;
-                }
 
-                @Override
-                public boolean isDataFlavorSupported(DataFlavor flavor) {
-                    return true;
-                }
+                    @Override
+                    public boolean isDataFlavorSupported(DataFlavor flavor) {
+                        return true;
+                    }
 
-                @Override
-                public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-                    return new ByteArrayInputStream(text.getBytes(Charset.forName("US-ASCII")));
-                }
+                    @Override
+                    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+                        return new ByteArrayInputStream(text.getBytes(Charset.forName("US-ASCII")));
+                    }
 
-            };
-        } else {
-            t = new StringSelection(text);
+                };
+            } else {
+                t = new StringSelection(text);
+            }
+            systemClipboard.setContents(t, getInstance());
         }
-        systemClipboard.setContents(t, getInstance());
     }
 
     public void paste(String filename) {
@@ -299,10 +301,13 @@ public class Clip4MoniApplication implements ActionListener,
         for (int i = 0; i < menu.getItemCount(); i++) {
             final MenuItem item = menu.getItem(i);
             // that's the way AWT creates a separator
-            if (menu.getLabel().startsWith("-")) {
+            String label = menu.getLabel();
+            if ((label != null) && (menu.getLabel().startsWith("-"))) {
                 continue;
             }
-            boolean _state = item.getActionCommand().equals(Messages.MI_QUIT) ? true : state;
+            String actionCommand = item.getActionCommand();
+            boolean _state = ((actionCommand != null) && actionCommand.equals(Messages.MI_QUIT))
+                    ? true : state;
             item.setEnabled(_state);
         }
     }
