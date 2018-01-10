@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2013  Thomas Kuenneth
+ * Copyright (C) 2013 - 2018  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -123,5 +123,36 @@ public class FileHelper {
             return new File(Helper.getSnippetsDir(), name);
         }
         return null;
+    }
+
+    /**
+     * Checks if a file starts with a magic.
+     *
+     * @param f file to check
+     * @return true if the file starts with a magic
+     */
+    public static boolean hasMagic(File f) {
+        boolean result = false;
+        if (f != null) {
+            byte[] buf = new byte[4];
+            FileInputStream fin = null;
+            try {
+                fin = new FileInputStream(f);
+                if (fin.read(buf) == 4) {
+                    result = Arrays.equals(MAGIC, Arrays.copyOfRange(buf, 0, 4));
+                }
+            } catch (IOException e) {
+                LOGGER.throwing(TAG, "hasMagic()", e);
+            } finally {
+                if (fin != null) {
+                    try {
+                        fin.close();
+                    } catch (IOException e) {
+                        LOGGER.throwing(TAG, "hasMagic()", e);
+                    }
+                }
+            }
+        }
+        return result;
     }
 }

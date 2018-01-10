@@ -31,7 +31,7 @@ public class Entry {
         this.key = key;
         this.value = value;
     }
-    
+
     public static Entry createEntry(String all) {
         Entry e = new Entry();
         e.setAll(all);
