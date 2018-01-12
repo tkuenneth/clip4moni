@@ -129,7 +129,6 @@ public class Clip4MoniApplication implements ActionListener,
     }
 
     private void createUI() {
-        // is the system tray supported?
         if (!SystemTray.isSupported()) {
             LOGGER.log(Level.SEVERE, "system tray not supported");
             System.exit(1);
@@ -137,16 +136,11 @@ public class Clip4MoniApplication implements ActionListener,
         final SystemTray tray = SystemTray.getSystemTray();
         snippets = new DefaultListModel<>();
         loadList();
-        /*
-         * build the menu
-         */
+        // build the menu
         menu = new PopupMenu(Helper.PROGNAME);
         createPluginMenu();
         populatePopup();
-        /*
-         * load the icon to be shown in the system try and activate the
-         * whole thing
-         */
+        // load and activate systemtray icon
         Dimension preferredSize = tray.getTrayIconSize();
         LOGGER.log(Level.CONFIG, "tray icon size: {0}x{1} pixels",
                 new Object[]{preferredSize.width, preferredSize.height});
@@ -162,8 +156,8 @@ public class Clip4MoniApplication implements ActionListener,
         }
     }
 
-    /*
-     * load the contents of a file into the DefaultListModel snippets
+    /**
+     * Load the contents of a file into the DefaultListModel snippets
      */
     private synchronized void loadList() {
         File filelist = Helper.getFileList();
@@ -178,9 +172,8 @@ public class Clip4MoniApplication implements ActionListener,
         }
     }
 
-    /*
-     * this method saves to contents of the snippets DefaultListModel into a
-     * file
+    /**
+     * Save contents of the snippets DefaultListModel into a file
      */
     private void saveList(File filelist) {
         StringBuilder sb = new StringBuilder();
@@ -394,7 +387,7 @@ public class Clip4MoniApplication implements ActionListener,
         return sb.toString();
     }
 
-    /*
+    /**
      * Show a copyright box
      */
     private void info() {
@@ -417,7 +410,7 @@ public class Clip4MoniApplication implements ActionListener,
         }
     }
 
-    /*
+    /**
      * Quits the application.
      */
     private void quit() {
