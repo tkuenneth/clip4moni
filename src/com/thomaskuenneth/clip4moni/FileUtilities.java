@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -46,7 +45,7 @@ public class FileUtilities {
      * @return a list of strings
      */
     public static List<String> getLines(File f) {
-        ArrayList<String> l = new ArrayList<String>();
+        ArrayList<String> l = new ArrayList<>();
         FileReader r = null;
         BufferedReader br = null;
         try {
