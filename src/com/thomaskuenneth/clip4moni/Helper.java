@@ -41,19 +41,17 @@ public class Helper {
     private static final String TAG = Helper.class.getName();
     private static final Logger LOGGER = Logger.getLogger(TAG);
 
-    private static final String os_name = System.getProperty("os.name");
-    private static final String home_dir = System.getProperty("user.home");
-    private static final String file_separator = System
-            .getProperty("file.separator");
-    private static final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
-    private static final Dimension screenSize = defaultToolkit.getScreenSize();
+    private static final String OS_NAME = System.getProperty("os.name");
+    private static final String HOME_DIR = System.getProperty("user.home");
+    private static final Toolkit DEFAULT_TOOLKIT = Toolkit.getDefaultToolkit();
+    private static final Dimension SCREEN_SIZE = DEFAULT_TOOLKIT.getScreenSize();
 
     private static final String SNIPPETS_DIR = "SnippetsDir";
     private static final String LOOK_AND_FEEL = "LookAndFeel";
     private static final String MACOSX_WORKAROUND = "MacOSXWorkaround";
 
     public static final String LISTNAME = "Clip4Moni.list";
-    public static final int SCREEN_RESOLUTION = defaultToolkit.getScreenResolution();
+    public static final int SCREEN_RESOLUTION = DEFAULT_TOOLKIT.getScreenResolution();
     public static final String PROGNAME = Messages.getString("PROGNAME");
 
     /**
@@ -62,7 +60,7 @@ public class Helper {
      * @return if the machine is running a version of Mac OS X
      */
     public static boolean isMacOSX() {
-        return os_name.toLowerCase().startsWith("mac os x");
+        return OS_NAME.toLowerCase().startsWith("mac os x");
     }
 
     /**
@@ -73,10 +71,10 @@ public class Helper {
     public static String getLibraryDir() {
         String path;
         if (isMacOSX()) {
-            path = home_dir + file_separator + "Library" + file_separator
+            path = HOME_DIR + File.separator + "Library" + File.separator
                     + "Preferences";
         } else {
-            path = home_dir;
+            path = HOME_DIR;
         }
         return path;
     }
@@ -87,7 +85,7 @@ public class Helper {
      * @return the screen size
      */
     public static Dimension getScreenSize() {
-        return new Dimension(screenSize);
+        return new Dimension(SCREEN_SIZE);
     }
 
     /**
@@ -96,7 +94,7 @@ public class Helper {
      * @return the system clipboard
      */
     public static Clipboard getSystemClipboard() {
-        return defaultToolkit.getSystemClipboard();
+        return DEFAULT_TOOLKIT.getSystemClipboard();
     }
 
     /**
@@ -107,7 +105,7 @@ public class Helper {
     public static File getSnippetsDir() {
         Preferences prefs = getPrefs();
         String path = prefs.get(SNIPPETS_DIR, getLibraryDir()
-                + file_separator + PROGNAME);
+                + File.separator + PROGNAME);
         return getFileFromPath(path);
     }
 
