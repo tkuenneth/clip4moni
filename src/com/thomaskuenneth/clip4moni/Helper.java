@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2008 - 2015  Thomas Kuenneth
+ * Copyright (C) 2008 - 2018  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -51,8 +51,8 @@ public class Helper {
     private static final String SNIPPETS_DIR = "SnippetsDir";
     private static final String LOOK_AND_FEEL = "LookAndFeel";
     private static final String MACOSX_WORKAROUND = "MacOSXWorkaround";
-    private static final String LISTNAME = "Clip4Moni.list";
 
+    public static final String LISTNAME = "Clip4Moni.list";
     public static final int SCREEN_RESOLUTION = defaultToolkit.getScreenResolution();
     public static final String PROGNAME = Messages.getString("PROGNAME");
 
