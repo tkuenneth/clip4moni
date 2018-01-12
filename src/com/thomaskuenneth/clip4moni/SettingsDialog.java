@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2013 - 2015  Thomas Kuenneth
+ * Copyright (C) 2013 - 2018  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -34,6 +34,10 @@ public class SettingsDialog extends AbstractDialog {
 
     public SettingsDialog() {
         p = new SettingsPanel();
+        init();
+    }
+
+    private void init() {
         add(p, BorderLayout.CENTER);
     }
 
@@ -54,7 +58,7 @@ public class SettingsDialog extends AbstractDialog {
     public String getLookAndFeel() {
         return p.getLookAndFeel();
     }
-    
+
     public boolean isMacOSXWorkaroundActive() {
         return p.isMacOSXWorkaroundActive();
     }
