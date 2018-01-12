@@ -98,7 +98,7 @@ public class FileHelper {
                     }
                 }
             }
-            if (len > 4) {
+            if (len >= 4) {
                 if (Arrays.equals(MAGIC, Arrays.copyOfRange(buf, 0, 4))) {
                     try {
                         return new String(buf, 4, len - 4, UTF8);
