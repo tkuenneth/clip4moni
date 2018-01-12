@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2008 - 2015  Thomas Kuenneth
+ * Copyright (C) 2008 - 2018  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -51,16 +51,20 @@ public class AddEntryDialog extends AbstractDialog {
     private String title;
 
     public AddEntryDialog() {
+        textfieldDescription = new JTextField();
+        textareaContents = new JTextArea();
+        init();
+    }
+
+    private void init() {
         // the description field
         JPanel panelDescription = new JPanel(new BorderLayout());
-        textfieldDescription = new JTextField();
         panelDescription.add(new JLabel(Messages.getString("STR_DESCRIPTION")), BorderLayout.NORTH);
         panelDescription.add(textfieldDescription, BorderLayout.CENTER);
         // the contents field
         JPanel panelContents = new JPanel(new BorderLayout());
         panelContents.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         panelContents.add(new JLabel(Messages.getString("STR_CONTENTS")), BorderLayout.NORTH);
-        textareaContents = new JTextArea();
         textareaContents.setWrapStyleWord(true);
         textareaContents.setLineWrap(true);
         JScrollPane sp = new JScrollPane(textareaContents,
@@ -71,14 +75,10 @@ public class AddEntryDialog extends AbstractDialog {
         add(panelDescription, BorderLayout.NORTH);
         add(panelContents, BorderLayout.CENTER);
         // ActionListener
-        final ActionListener al = new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String cmd = e.getActionCommand();
-                String result = PluginManager.callPlugin(cmd, textareaContents.getText());
-                textareaContents.setText(result);
-            }
+        final ActionListener al = (ActionEvent e) -> {
+            String cmd = e.getActionCommand();
+            String result = PluginManager.callPlugin(cmd, textareaContents.getText());
+            textareaContents.setText(result);
         };
         // populate plugin menu
         final PopupMenu pm = new PopupMenu();
