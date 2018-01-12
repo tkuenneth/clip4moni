@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2008 - 2017  Thomas Kuenneth
+ * Copyright (C) 2008 - 2018  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -40,6 +40,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -78,7 +85,38 @@ public class Clip4MoniApplication implements ActionListener,
             Helper.restoreLookAndFeel();
             INSTANCE.prepareClipboard();
             INSTANCE.createUI();
+            INSTANCE.setupWatchService();
         });
+    }
+
+    private void setupWatchService() {
+        Thread t = new Thread(() -> {
+            try {
+                WatchService watchService
+                        = FileSystems.getDefault().newWatchService();
+                Path path = Paths.get(Helper.getSnippetsDir().getAbsolutePath());
+                path.register(
+                        watchService,
+                        StandardWatchEventKinds.ENTRY_CREATE,
+                        StandardWatchEventKinds.ENTRY_DELETE,
+                        StandardWatchEventKinds.ENTRY_MODIFY);
+                WatchKey key;
+                while ((key = watchService.take()) != null) {
+                    for (WatchEvent<?> event : key.pollEvents()) {
+                        String name = event.context().toString();
+                        if (Helper.LISTNAME.equals(name)) {
+                            loadList();
+                            populatePopup();
+                        }
+                    }
+                    key.reset();
+                }
+            } catch (IOException | InterruptedException e) {
+                LOGGER.log(Level.SEVERE, "setupWatchService()", e);
+            }
+        });
+        t.setDaemon(true);
+        t.start();
     }
 
     private void prepareClipboard() {
@@ -98,7 +136,7 @@ public class Clip4MoniApplication implements ActionListener,
         }
         final SystemTray tray = SystemTray.getSystemTray();
         snippets = new DefaultListModel<>();
-        loadList(Helper.getFileList());
+        loadList();
         /*
          * build the menu
          */
@@ -124,12 +162,11 @@ public class Clip4MoniApplication implements ActionListener,
         }
     }
 
-    /**
+    /*
      * load the contents of a file into the DefaultListModel snippets
-     *
-     * @param filelist file to load from
      */
-    private void loadList(File filelist) {
+    private synchronized void loadList() {
+        File filelist = Helper.getFileList();
         snippets.removeAllElements();
         String data = FileHelper.loadFile(filelist);
         String[] list = data.split("\n");
@@ -224,7 +261,7 @@ public class Clip4MoniApplication implements ActionListener,
     /**
      * Populates the main popup menu.
      */
-    private void populatePopup() {
+    private synchronized void populatePopup() {
         menu.removeAll();
         int num = snippets.size();
         for (int i = 0; i < num; i++) {
@@ -375,7 +412,7 @@ public class Clip4MoniApplication implements ActionListener,
             Helper.setSnippetsDir(d.getSnippetsDir());
             Helper.storeLookAndFeel(d.getLookAndFeel());
             Helper.setMacOSXWorkaroundActive(d.isMacOSXWorkaroundActive());
-            loadList(Helper.getFileList());
+            loadList();
             populatePopup();
         }
     }
