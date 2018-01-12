@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2013 - 2015  Thomas Kuenneth
+ * Copyright (C) 2013 - 2018  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -37,13 +37,13 @@ public class MacHelp {
 
     private static final String TAG = MacHelp.class.getName();
     private static final Logger LOGGER = Logger.getLogger(TAG);
-    private static final ScriptEngine engine = getScriptEngine();
+    private static final ScriptEngine ENGINE = getScriptEngine();
 
     /**
      * If running on Mac OS X, this method tries to obtain an AppleScript script
-     * engine.
+     * ENGINE.
      *
-     * @return an instance of an AppleScript script engine or {@code null}
+     * @return an instance of an AppleScript script ENGINE or {@code null}
      */
     private static ScriptEngine getScriptEngine() {
         if (Helper.isMacOSX()) {
@@ -100,9 +100,9 @@ public class MacHelp {
      * @return the result of the script execution or {@code null}
      */
     private static Object run(String script, String methodName) {
-        if ((Helper.isMacOSXWorkaroundActive()) && (engine != null)) {
+        if ((Helper.isMacOSXWorkaroundActive()) && (ENGINE != null)) {
             try {
-                return engine.eval(script);
+                return ENGINE.eval(script);
             } catch (ScriptException ex) {
                 LOGGER.throwing(TAG, methodName, ex);
             }
