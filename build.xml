@@ -78,7 +78,11 @@
     </tstamp>
     
     <target name="-pre-init">
-            <property name="deploy.icon.native" value="./artwork/Clip4Moni.icns"/>
+        <condition property="deploy.icon.native" 
+                   value="./artwork/Clip4Moni.ico" 
+                   else="./artwork/Clip4Moni.icns">
+            <os family="windows" />
+        </condition>
     </target>
 
     <target name="-pre-jar">
