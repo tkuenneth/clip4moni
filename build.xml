@@ -76,6 +76,10 @@
     <tstamp>
         <format property="now" pattern="yyMMdd"/>
     </tstamp>
+    
+    <target name="-pre-init">
+            <property name="deploy.icon.native" value="./artwork/Clip4Moni.icns"/>
+    </target>
 
     <target name="-pre-jar">
     </target>
