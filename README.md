@@ -7,3 +7,10 @@ PASTE in the destination application to have the text or phrase inserted. Clip4M
 It requires Java SE 6 update 10 or later to run.
 
 Clip4Moni is released under the terms of the GNU GENERAL PUBLIC LICENSE Version 2.
+
+If you have built a native app bundle on macOS, you can edit `info.plist` to include
+```xml
+<key>LSUIElement</key>
+<true/>
+```
+This will hide the Dock icon.
