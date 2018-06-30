@@ -47,6 +47,7 @@ import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -76,8 +77,34 @@ public class Clip4MoniApplication implements ActionListener,
 
     private final ActionListener execute = (ActionEvent e) -> {
         try {
-            String[] args = e.getActionCommand().split(" ");
-            Runtime.getRuntime().exec(args);
+            String args = e.getActionCommand();
+            ArrayList<String> l = new ArrayList<>();
+            StringBuilder sb = new StringBuilder();
+            boolean quoted = false;
+            for (int i = 0; i < args.length(); i++) {
+                char ch = args.charAt(i);
+                switch (ch) {
+                    case '\"':
+                        quoted = !quoted;
+                        if (!quoted) {
+                            l.add(sb.toString());
+                            sb.setLength(0);
+                        }
+                        break;
+                    case ' ':
+                        if (!quoted) {
+                            l.add(sb.toString());
+                            sb.setLength(0);
+                        } else {
+                            sb.append(ch);
+                        }
+                        break;
+                    default:
+                        sb.append(ch);
+                        break;
+                }
+            }
+            Runtime.getRuntime().exec(l.toArray(new String[0]));
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, "Runtime.getRuntime().exec()", ex);
         }
