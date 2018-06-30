@@ -38,6 +38,7 @@ public class Messages {
     public static final String MI_GETFROMCLIPBOARD = getString("MI_GETFROMCLIPBOARD");
     public static final String MI_CLIPBOARD = getString("MI_CLIPBOARD");
     public static final String MI_SETTINGS = getString("MI_SETTINGS");
+    public static final String MI_LAUNCH = getString("MI_LAUNCH");
 
     // buttons
     public static final String BTTN_UP = getString("BTTN_UP");

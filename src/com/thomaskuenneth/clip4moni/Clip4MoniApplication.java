@@ -72,6 +72,16 @@ public class Clip4MoniApplication implements ActionListener,
     private DefaultListModel<Entry> snippets;
     private PopupMenu menu;
     private Menu pluginMenu;
+    private Menu launchMenu;
+
+    private final ActionListener execute = (ActionEvent e) -> {
+        try {
+            String[] args = e.getActionCommand().split(" ");
+            Runtime.getRuntime().exec(args);
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, "Runtime.getRuntime().exec()", ex);
+        }
+    };
 
     private Clip4MoniApplication() {
     }
@@ -139,6 +149,7 @@ public class Clip4MoniApplication implements ActionListener,
         // build the menu
         menu = new PopupMenu(Helper.PROGNAME);
         createPluginMenu();
+        createLaunchMenu();
         populatePopup();
         // load and activate systemtray icon
         Dimension preferredSize = tray.getTrayIconSize();
@@ -251,6 +262,24 @@ public class Clip4MoniApplication implements ActionListener,
         PluginManager.populateMenu(pluginMenu, al);
     }
 
+    private void createLaunchMenu() {
+        launchMenu = UIHelper.createMenu(Messages.MI_LAUNCH);
+        File filelist = new File(System.getProperty("user.home"), "LaunchList.txt");
+        String data = FileHelper.loadFile(filelist);
+        if (data != null) {
+            String[] list = data.split("\n");
+            for (String elem : list) {
+                if (elem.length() > 0) {
+                    String line = elem.trim();
+                    String[] entry = line.split("=");
+                    if (entry.length == 2) {
+                        UIHelper.createMenuItem(entry[0], launchMenu, execute, entry[1]);
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Populates the main popup menu.
      */
@@ -271,6 +300,9 @@ public class Clip4MoniApplication implements ActionListener,
         menu.addSeparator();
         UIHelper.createMenuItem(Messages.MI_INFO, menu, this, null);
         UIHelper.createMenuItem(Messages.MI_SETTINGS, menu, this, null);
+        if (launchMenu.getItemCount() > 0) {
+            menu.add(launchMenu);
+        }
         menu.addSeparator();
         UIHelper.createMenuItem(Messages.MI_QUIT, menu, this, null);
     }
