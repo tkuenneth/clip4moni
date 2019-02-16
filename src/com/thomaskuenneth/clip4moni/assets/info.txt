@@ -8,8 +8,8 @@
         Bildschirmaufl&ouml;sung: {6} &times; {7} Pixel, {8} dpi
         
         <p>
-            <a href="http://www.thomaskuenneth.com/">www.thomaskuenneth.com</a><br>
-            <a href="mailto:thomas@thomaskuenneth.com">thomas@thomaskuenneth.com</a>
+            <a href="https://bitbucket.org/tkuenneth/clip4moni">https://bitbucket.org/tkuenneth/clip4moni</a><br>
+            <a href="mailto:kuennetht@gmail.com">kuennetht@gmail.com</a>
         </p>
 
         <p>
