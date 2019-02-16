@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2008 - 2017  Thomas Kuenneth
+ * Copyright (C) 2008 - 2019  Thomas Kuenneth
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -57,8 +57,10 @@ public class PluginManager {
     private static final String MI_SHOW_CONTENTS = Messages.getString("MI_SHOW_CONTENTS");
     private static final String MI_HTML_TO_RTF = Messages.getString("MI_HTML_TO_RTF");
     private static final String MI_QUOTE = Messages.getString("MI_QUOTE");
+    private static final String MI_REPLACE = Messages.getString("MI_REPLACE");
 
-    private static final String[] PLUGINS = new String[]{MI_SHOW_CONTENTS, MI_REMOVE_BLANKS,
+    private static final String[] PLUGINS = new String[]{MI_SHOW_CONTENTS, 
+        MI_REPLACE, MI_REMOVE_BLANKS,
         MI_REMOVE_SEMIVOWELS, MI_TAB_TO_SPACE, MI_UPPERCASE,
         MI_REMOVE_CRLF, MI_REMOVE_SPECIALS, MI_STRIP_NUMBERS,
         MI_HTML_TO_RTF, MI_QUOTE};
@@ -72,7 +74,7 @@ public class PluginManager {
     public static void populateMenu(Menu pm, ActionListener al) {
         for (String piName : PLUGINS) {
             UIHelper.createMenuItem(piName, pm, al, null);
-            if (pm.getItemCount() == 1) {
+            if (pm.getItemCount() == 2) {
                 pm.addSeparator();
             }
         }
@@ -105,6 +107,10 @@ public class PluginManager {
         } else if (cmd.equalsIgnoreCase(MI_SHOW_CONTENTS)) {
             new ShowContentsDialog(in).showDialog();
             return in;
+        } else if (cmd.equalsIgnoreCase(MI_REPLACE)) {
+            ReplaceDialog d = new ReplaceDialog(in);
+            d.showDialog();
+            return d.getContents();
         } else if (cmd.equalsIgnoreCase(MI_QUOTE)) {
             return quote(in);
         }
