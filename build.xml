@@ -7,8 +7,7 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="Clip4Moni" default="default" basedir=".">
-    
+<project name="Clip4Moni" default="default" basedir="." xmlns:j2semodularproject="http://www.netbeans.org/ns/j2se-modular-project/1">
     <description>Builds, tests, and runs the project Clip4Moni.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
@@ -52,19 +51,10 @@
       -init-macrodef-junit:     defines macro for junit execution
       -init-macrodef-debug:     defines macro for class debugging
       -init-macrodef-java:      defines macro for class execution
-      -do-jar-with-manifest:    JAR building (if you are using a manifest)
-      -do-jar-without-manifest: JAR building (if you are not using a manifest)
+      -do-jar:                  JAR building
       run:                      execution of project 
       -javadoc-build:           Javadoc generation
       test-report:              JUnit report generation
-
-    An example of overriding the target for project execution could look like this:
-
-        <target name="run" depends="Clip4Moni-impl.jar">
-            <exec dir="bin" executable="launcher.exe">
-                <arg file="${dist.jar}"/>
-            </exec>
-        </target>
 
     Notice that the overridden target depends on the jar target and not only on 
     the compile target as the regular run target does. Again, for a list of available 
@@ -72,23 +62,4 @@
     nbproject/build-impl.xml file. 
 
     -->
-    
-    <tstamp>
-        <format property="now" pattern="yyMMdd"/>
-    </tstamp>
-    
-    <target name="-pre-init">
-        <condition property="deploy.icon.native" 
-                   value="./artwork/Clip4Moni.ico" 
-                   else="./artwork/Clip4Moni.icns">
-            <os family="windows" />
-        </condition>
-    </target>
-
-    <target name="-pre-jar">
-    </target>
-    
-    <target name="-post-jar">
-    </target>
-    
 </project>
