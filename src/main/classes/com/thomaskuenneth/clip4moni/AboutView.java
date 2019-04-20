@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2015 - 2017  Thomas Kuenneth
+ * Copyright (C) 2015 - 2019  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -52,19 +52,23 @@ public class AboutView extends JPanel {
         createUI();
     }
 
+    private String getVersion() {
+        String version = getClass().getPackage().getImplementationVersion();
+        if (version == null) {
+            version = Clip4Moni.VERSION;
+        }
+        return version;
+    }
+    
     private void createUI() {
         JEditorPane pane = new JEditorPane();
         pane.setPreferredSize(UIHelper.PREFERRED_SIZE);
         Font font = pane.getFont();
         String html = FileUtilities.getResourceAsString(getClass(), URL_INFO);
-        String version = getClass().getPackage().getImplementationVersion();
-        if (version == null) {
-            version = StringUtils.UNKNOWN;
-        }
         Dimension screenSize = Helper.getScreenSize();
-        html = MessageFormat.format(html, font.getFamily(), version,
-                System.getProperty("java.version"), System.getProperty("java.vendor"),
-                System.getProperty("os.name"), System.getProperty("os.version"),
+        html = MessageFormat.format(html, font.getFamily(), getVersion(),
+                getJavaVersion(), getJavaVendor(),
+                getOsName(), getOsVersion(),
                 Integer.toString(screenSize.width),
                 Integer.toString(screenSize.height),
                 Integer.toString(Helper.SCREEN_RESOLUTION));
@@ -92,5 +96,23 @@ public class AboutView extends JPanel {
         JScrollPane scrollpane = new JScrollPane(pane);
         scrollpane.setBorder(BorderFactory.createEmptyBorder());
         add(scrollpane, BorderLayout.CENTER);
+    }
+
+    private static String getJavaVersion() {
+        return System.getProperty("java.version");
+    }
+
+    private static String getJavaVendor() {
+        return System.getProperty("java.vendor");
+    }
+
+    private static String getOsName() {
+        return System.getProperty("os.name");
+    }
+
+    private static String getOsVersion() {
+        // String osVersion = System.getProperty("os.version");
+        String osVersion = "";
+        return osVersion;
     }
 }

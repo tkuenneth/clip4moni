@@ -4,7 +4,7 @@
 
         <h1>Clip4Moni {1}</h1><strong>geschrieben von Thomas K&uuml;nneth</strong><br>
         Java-Version: {2} ({3})<br>
-        Betriebssystem: {4} {5}<br>
+        Betriebssystem: {4}{5}<br>
         Bildschirmaufl&ouml;sung: {6} &times; {7} Pixel, {8} dpi
         
         <p>
