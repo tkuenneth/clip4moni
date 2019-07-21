@@ -53,11 +53,7 @@ public class AboutView extends JPanel {
     }
 
     private String getVersion() {
-        String version = getClass().getPackage().getImplementationVersion();
-        if (version == null) {
-            version = Clip4Moni.VERSION;
-        }
-        return version;
+        return Clip4Moni.VERSION;
     }
     
     private void createUI() {

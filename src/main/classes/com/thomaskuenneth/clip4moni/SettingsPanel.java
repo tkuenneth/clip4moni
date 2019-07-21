@@ -3,7 +3,7 @@
  * 
  * This file is part of Clip4Moni.
  * 
- * Copyright (C) 2013 - 2018  Thomas Kuenneth
+ * Copyright (C) 2013 - 2019  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -46,7 +46,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     }
 
     public boolean isMacOSXWorkaroundActive() {
-        return checkboxMacWorkAround.isSelected();
+        return checkboxMacWorkAround.isSelected() && checkboxMacWorkAround.isVisible();
     }
 
     /**
@@ -176,7 +176,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     }
 
     private void updateMacWorkaround() {
-        checkboxMacWorkAround.setEnabled(Helper.isMacOSX());
+        checkboxMacWorkAround.setVisible(Helper.isMacOSX());
         checkboxMacWorkAround.setSelected(Helper.isMacOSXWorkaroundActive());
     }
 
