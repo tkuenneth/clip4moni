@@ -48,6 +48,7 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -173,7 +174,7 @@ public class Clip4MoniApplication implements ActionListener,
         final SystemTray tray = SystemTray.getSystemTray();
         snippets = new DefaultListModel<>();
         loadList();
-        // build the menu
+        // build the currentMenu
         menu = new PopupMenu(Helper.PROGNAME);
         createPluginMenu();
         createLaunchMenu();
@@ -293,14 +294,33 @@ public class Clip4MoniApplication implements ActionListener,
         launchMenu = UIHelper.createMenu(Messages.MI_LAUNCH);
         File filelist = new File(System.getProperty("user.home"), "LaunchList.txt");
         String data = FileHelper.loadFile(filelist);
+        List<Menu> menus = new ArrayList<>();
+        menus.add(launchMenu);
         if (data != null) {
             String[] list = data.split("\n");
             for (String elem : list) {
                 if (elem.length() > 0) {
+                    int last = menus.size() - 1;
+                    Menu currentMenu = menus.get(last);
                     String line = elem.trim();
-                    String[] entry = line.split("=");
-                    if (entry.length == 2) {
-                        UIHelper.createMenuItem(entry[0], launchMenu, execute, entry[1]);
+                    if (line.startsWith("---")) {
+                        currentMenu.addSeparator();
+                    } else if (line.equals("..")) {
+                        if (menus.size() > 1) {
+                            menus.remove(last);
+                        }
+                    } else if (line.startsWith(">> ")) {
+                        String name = line.substring(3);
+                        if (name.length() > 0) {
+                            Menu subMenu = new Menu(name);
+                            currentMenu.add(subMenu);
+                            menus.add(subMenu);
+                        }
+                    } else {
+                        String[] entry = line.split("=");
+                        if (entry.length == 2) {
+                            UIHelper.createMenuItem(entry[0], currentMenu, execute, entry[1]);
+                        }
                     }
                 }
             }
@@ -308,7 +328,7 @@ public class Clip4MoniApplication implements ActionListener,
     }
 
     /**
-     * Populates the main popup menu.
+     * Populates the main popup currentMenu.
      */
     private synchronized void populatePopup() {
         menu.removeAll();
