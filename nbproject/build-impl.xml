@@ -1190,7 +1190,6 @@ is divided into following sections:
         <fail unless="main.class">No main class specified</fail>
     </target>
     <target depends="init,compile,-check-main-class,-main-module-check" description="Run a main class." name="run">
-        <property name="main.class.relativepath" refid="main.class.relativepath"/>
         <pathconvert pathsep="," property="src.dir.list" refid="have.sources.set"/>
         <j2semodularproject1:modsource_regexp xmlns:j2semodularproject1="http://www.netbeans.org/ns/j2se-modular-project/1" filePattern="(.*$)" modsource="${src.dir.path}" property="run.src.dir.path.regexp"/>
         <j2semodularproject1:java xmlns:j2semodularproject1="http://www.netbeans.org/ns/j2se-modular-project/1">
