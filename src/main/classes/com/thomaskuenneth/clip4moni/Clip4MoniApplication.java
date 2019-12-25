@@ -26,6 +26,7 @@ import java.awt.Menu;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
+import java.awt.Taskbar;
 import java.awt.TrayIcon;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -112,6 +113,7 @@ public class Clip4MoniApplication implements ActionListener,
     };
 
     private Clip4MoniApplication() {
+        setupTaskbar();
     }
 
     public static Clip4MoniApplication getInstance() {
@@ -125,6 +127,16 @@ public class Clip4MoniApplication implements ActionListener,
             INSTANCE.createUI();
             INSTANCE.setupWatchService();
         });
+    }
+
+    private void setupTaskbar() {
+        if (Taskbar.isTaskbarSupported()) {
+            Taskbar tb = Taskbar.getTaskbar();
+            if (tb.isSupported(Taskbar.Feature.ICON_IMAGE)) {
+                var image = UIHelper.getImageIcon(getClass(), PROGRAMICON).getImage();
+                tb.setIconImage(image);
+            }
+        }
     }
 
     private void setupWatchService() {
