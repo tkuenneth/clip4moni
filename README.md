@@ -11,6 +11,6 @@ Clip4Moni is released under the terms of the GNU GENERAL PUBLIC LICENSE Version 
 If you have built a native app bundle on macOS, you can edit `info.plist` to include
 ```xml
 <key>LSUIElement</key>
-<true/>
+<string>1</string>
 ```
 This will hide the Dock icon.
