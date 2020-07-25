@@ -7,3 +7,7 @@ nbdist/
 .nb-gradle/
 /Clip4Moni.app/
 .DS_Store
+stdout.txt
+stderr.txt
+*.msi
+Clip4Moni.lnk
