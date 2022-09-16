@@ -36,17 +36,19 @@ compose.desktop {
     application {
         mainClass = "MainKt"
         nativeDistributions {
+            modules("java.instrument", "java.prefs", "java.scripting", "jdk.unsupported")
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Clip4Moni"
             packageVersion = "1.4.0"
             description = "Manage text snippets"
-            copyright = "© 2008 - 2022 Thomas Kuenneth. All rights reserved."
+            copyright = "2008 - 2022 Thomas Kuenneth. All rights reserved."
             vendor = "Thomas Kuenneth"
             macOS {
                 iconFile.set(project.file("Clip4Moni.icns"))
             }
             windows {
                 iconFile.set(project.file("artwork/Clip4Moni.ico"))
+                menuGroup = "Thomas Kuenneth"
             }
         }
     }
