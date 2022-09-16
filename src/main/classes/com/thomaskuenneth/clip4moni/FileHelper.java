@@ -1,8 +1,8 @@
 /*
  * FileHelper.java
- * 
+ *
  * This file is part of Clip4Moni.
- * 
+ *
  * Copyright (C) 2013 - 2018  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
@@ -24,8 +24,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -37,14 +38,13 @@ public class FileHelper {
 
     private static final String TAG = FileHelper.class.getName();
     private static final Logger LOGGER = Logger.getLogger(TAG);
-    private static final String UTF8 = "UTF-8";
     private static final byte[] MAGIC = {0x2, 0x9, 0x0, 0x8};
 
     /**
      * Saves a string to a file using UTF-8. The first four bytes form a magic
      * number: 0x2, 0x9, 0x0, 0x8
      *
-     * @param f the file
+     * @param f    the file
      * @param text the string
      * @return true if the file could be written successfully, false otherwise
      */
@@ -53,7 +53,7 @@ public class FileHelper {
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(f);
-            byte[] buf = text.getBytes(UTF8);
+            byte[] buf = text.getBytes(StandardCharsets.UTF_8);
             fos.write(MAGIC);
             fos.write(buf);
             result = true;
@@ -86,7 +86,9 @@ public class FileHelper {
             FileInputStream fin = null;
             try {
                 fin = new FileInputStream(f);
-                fin.read(buf);
+                var read = fin.read(buf);
+                if (len != read)
+                    LOGGER.log(Level.SEVERE, String.format("length is %d but %d bytes were read", len, read));
             } catch (IOException e) {
                 LOGGER.throwing(TAG, "loadFile", e);
             } finally {
@@ -100,11 +102,7 @@ public class FileHelper {
             }
             if (len >= 4) {
                 if (Arrays.equals(MAGIC, Arrays.copyOfRange(buf, 0, 4))) {
-                    try {
-                        return new String(buf, 4, len - 4, UTF8);
-                    } catch (UnsupportedEncodingException e) {
-                        LOGGER.throwing(TAG, "loadFile", e);
-                    }
+                    return new String(buf, 4, len - 4, StandardCharsets.UTF_8);
                 }
             }
             result = new String(buf);

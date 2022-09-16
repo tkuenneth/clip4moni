@@ -20,20 +20,14 @@
  */
 package com.thomaskuenneth.clip4moni;
 
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 /**
  * This dialog box shows a list of entries and allows to edit them.
@@ -72,9 +66,7 @@ public class EditEntriesDialog extends AbstractDialog {
             }
     });
 
-    private final ListSelectionListener lsl = (ListSelectionEvent e) -> {
-        updateEditEntriesButtons();
-    };
+    private final ListSelectionListener lsl = (ListSelectionEvent e) -> updateEditEntriesButtons();
 
     public EditEntriesDialog(DefaultListModel<Entry> snippets) {
         createUI(snippets);

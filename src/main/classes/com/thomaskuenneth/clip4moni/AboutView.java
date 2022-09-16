@@ -107,8 +107,6 @@ public class AboutView extends JPanel {
     }
 
     private static String getOsVersion() {
-        // String osVersion = System.getProperty("os.version");
-        String osVersion = "";
-        return osVersion;
+        return System.getProperty("os.version");
     }
 }

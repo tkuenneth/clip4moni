@@ -20,42 +20,24 @@
  */
 package com.thomaskuenneth.clip4moni;
 
-import java.awt.AWTException;
-import java.awt.Dimension;
-import java.awt.Menu;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
-import java.awt.SystemTray;
-import java.awt.Taskbar;
-import java.awt.TrayIcon;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import java.awt.*;
+import java.awt.datatransfer.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.nio.charset.Charset;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 public class Clip4MoniApplication implements ActionListener,
         ClipboardOwner {
@@ -243,7 +225,7 @@ public class Clip4MoniApplication implements ActionListener,
             MacHelp.activateApp(Helper.PROGNAME);
             try {
                 Thread.sleep(250);
-            } catch (InterruptedException ex) {
+            } catch (InterruptedException ignored) {
             }
             final String text = PluginManager.callPlugin(cmd, copyFromClipboard());
             SwingUtilities.invokeLater(() -> {
@@ -275,8 +257,8 @@ public class Clip4MoniApplication implements ActionListener,
                     }
 
                     @Override
-                    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-                        return new ByteArrayInputStream(text.getBytes(Charset.forName("US-ASCII")));
+                    public Object getTransferData(DataFlavor flavor) {
+                        return new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII));
                     }
 
                 };
@@ -427,8 +409,7 @@ public class Clip4MoniApplication implements ActionListener,
                 continue;
             }
             String actionCommand = item.getActionCommand();
-            boolean _state = ((actionCommand != null) && actionCommand.equals(Messages.MI_QUIT))
-                    ? true : state;
+            boolean _state = (actionCommand != null) && actionCommand.equals(Messages.MI_QUIT) || state;
             item.setEnabled(_state);
         }
     }
