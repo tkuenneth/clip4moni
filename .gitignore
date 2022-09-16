@@ -11,3 +11,4 @@ stdout.txt
 stderr.txt
 *.msi
 Clip4Moni.lnk
+out/
