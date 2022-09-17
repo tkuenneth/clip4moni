@@ -20,23 +20,16 @@
  */
 package com.thomaskuenneth.clip4moni;
 
-import java.awt.Menu;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.StringReader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.rtf.RTFEditorKit;
+import java.awt.Menu;
+import java.awt.event.ActionListener;
+import java.io.*;
+import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PluginManager {
 
@@ -89,21 +82,21 @@ public class PluginManager {
      */
     public static String callPlugin(String cmd, String in) {
         if (cmd.equalsIgnoreCase(MI_STRIP_NUMBERS)) {
-            return processData("stripNumbers", in);
+            return processData(PluginManager::stripNumbers, in);
         } else if (cmd.equalsIgnoreCase(MI_REMOVE_BLANKS)) {
             return removeBlanks(in);
         } else if (cmd.equalsIgnoreCase(MI_REMOVE_SEMIVOWELS)) {
-            return processData("removeSemivowels", in);
+            return processData(PluginManager::removeSemivowels, in);
         } else if (cmd.equalsIgnoreCase(MI_TAB_TO_SPACE)) {
-            return processData("convertTabToSpace", in);
+            return processData(PluginManager::convertTabToSpace, in);
         } else if (cmd.equalsIgnoreCase(MI_UPPERCASE)) {
             return toUpperCase(in);
         } else if (cmd.equalsIgnoreCase(MI_HTML_TO_RTF)) {
             return html2Rtf(in);
         } else if (cmd.equalsIgnoreCase(MI_REMOVE_CRLF)) {
-            return processData("removeCrLf", in, false);
+            return processData(PluginManager::removeCrLf, in, false);
         } else if (cmd.equalsIgnoreCase(MI_REMOVE_SPECIALS)) {
-            return processData("removeSpecials", in, false);
+            return processData(PluginManager::removeSpecials, in, false);
         } else if (cmd.equalsIgnoreCase(MI_SHOW_CONTENTS)) {
             new ShowContentsDialog(in).showDialog();
             return in;
@@ -129,7 +122,7 @@ public class PluginManager {
         String[] words = in.split("\\s+");
         for (String w : words) {
             if ((line.length() + w.length()) >= 40) {
-                result.append(line.toString());
+                result.append(line);
                 result.append("\n");
                 line.setLength(0);
             }
@@ -141,13 +134,13 @@ public class PluginManager {
             line.append(w);
         }
         if (line.length() > 0) {
-            result.append(line.toString());
+            result.append(line);
         }
         return result.toString().trim();
     }
 
     /**
-     * Converts an html string to rtf.
+     * Converts a html string to rtf
      *
      * @param html the string containing html
      * @return the resulting rtf
@@ -167,11 +160,11 @@ public class PluginManager {
         try {
             is = new ByteArrayInputStream(html.getBytes());
             os = new ByteArrayOutputStream();
-            RTFEditorKit editorkitRtf = new RTFEditorKit();
-            HTMLEditorKit editorkitHtml = new HTMLEditorKit();
-            Document doc = editorkitHtml.createDefaultDocument();
-            editorkitHtml.read(is, doc, 0);
-            editorkitRtf.write(os, doc, 0, doc.getLength());
+            RTFEditorKit editorKitRtf = new RTFEditorKit();
+            HTMLEditorKit editorKitHtml = new HTMLEditorKit();
+            Document doc = editorKitHtml.createDefaultDocument();
+            editorKitHtml.read(is, doc, 0);
+            editorKitRtf.write(os, doc, 0, doc.getLength());
             is.close();
             os.close();
             // need to replace a few things
@@ -186,33 +179,13 @@ public class PluginManager {
     }
 
     /**
-     * Replaces all occurances of a tab with two blanks.
+     * Replaces all occurrences of a tab with two blanks.
      *
-     * @param line string tomodify
+     * @param line string to modify
      * @return string with blanks instead of tabs
      */
     public static String convertTabToSpace(String line) {
-        char[] src = {'\t'};
-        String[] dst = {"  "};
-        int len = line.length();
-        int pos = 0;
-        char[] result = new char[2 * len];
-        for (int i = 0; i < len; i++) {
-            char ch = line.charAt(i);
-            boolean found = false;
-            for (int j = 0; j < src.length; j++) {
-                if (ch == src[j]) {
-                    result[pos++] = dst[j].charAt(0);
-                    result[pos++] = dst[j].charAt(1);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                result[pos++] = ch;
-            }
-        }
-        return new String(result, 0, pos);
+        return line.replaceAll("\t", "  ");
     }
 
     /**
@@ -317,35 +290,25 @@ public class PluginManager {
         return new String(chars, 0, pos);
     }
 
-    private static String call(String method, String line) {
-        try {
-            Class<?> c = ClassLoader.getSystemClassLoader().loadClass(CLASSNAME);
-            Class<?>[] signature = new Class[]{String.class};
-            Method m = c.getMethod(method, signature);
-            return (String) m.invoke(null, line);
-        } catch (ClassNotFoundException | NoSuchMethodException |
-                 SecurityException | IllegalAccessException |
-                 IllegalArgumentException | InvocationTargetException e) {
-            LOGGER.throwing(CLASSNAME, method, e);
-        }
-        return null;
-    }
-
-    private static String processData(String method, String in) {
+    private static String processData(
+            Function<String, String> method,
+            String in) {
         return processData(method, in, true);
     }
 
-    private static String processData(String method, String in,
-                                      boolean addEmptyLines) {
-        StringReader sr = null;
-        BufferedReader br = null;
+    private static String processData(
+            Function<String, String> method,
+            String in,
+            boolean addEmptyLines) {
         StringBuilder sb = new StringBuilder();
-        try {
-            sr = new StringReader(in);
-            br = new BufferedReader(sr);
+        try (
+                var sr = new StringReader(in);
+                var br = new BufferedReader(sr)
+        ) {
             String line;
             while ((line = br.readLine()) != null) {
-                line = call(method, line);
+                line = method.apply(line);
+                if (line == null) continue;
                 if (!addEmptyLines && (line.length() == 0)) {
                     continue;
                 }
@@ -357,17 +320,6 @@ public class PluginManager {
         } catch (IOException e) {
             LOGGER.throwing(CLASSNAME, "processData", e);
         }
-        if (br != null) {
-            try {
-                br.close();
-            } catch (IOException e) {
-                LOGGER.throwing(CLASSNAME, "processData", e);
-            }
-        }
-        if (sr != null) {
-            sr.close();
-        }
         return sb.toString();
     }
-
 }
