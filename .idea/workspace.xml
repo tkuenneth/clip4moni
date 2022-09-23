@@ -5,52 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d2ad919-8531-4c56-9010-23f04541b8d0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/Clip4Moni_jvm_1_4_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/ant.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/clip4moni.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Clip4Moni.ifp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/artwork/Clip4Moni.svg" beforeDir="false" afterPath="$PROJECT_DIR$/artwork/Clip4Moni.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jpackage.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jpackage_win.ps1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/build-impl.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/genfiles.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/project.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/project.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/AboutView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/AboutView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/AbstractDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/AbstractDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/AddEntryDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/AddEntryDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/Clip4Moni.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/Clip4Moni.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/Clip4MoniApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/Clip4MoniApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/EditEntriesDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/EditEntriesDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/Entry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/Entry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/FileHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/FileHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/FileUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/FileUtilities.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/Helper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/Helper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/LAFComboboxModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/LAFComboboxModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/MacHelp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/MacHelp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/Messages.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/Messages.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/resources/com/thomaskuenneth/clip4moni/Messages.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/PluginManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/PluginManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/ReplaceDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/ReplaceDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/SettingsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/SettingsDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/SettingsPanel.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/SettingsPanel.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/SettingsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/SettingsPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/ShowContentsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/ShowContentsDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/StringUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/StringUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/UIHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/java/com/thomaskuenneth/clip4moni/UIHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/assets/info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/resources/assets/info.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/graphics/16x16.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/resources/com/thomaskuenneth/clip4moni/graphics/16x16.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/graphics/17x22.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/resources/com/thomaskuenneth/clip4moni/graphics/17x22.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/com/thomaskuenneth/clip4moni/graphics/logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/resources/com/thomaskuenneth/clip4moni/graphics/logo.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/classes/module-info.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/main.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/Clip4Moni_jvm_1_4_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/Clip4Moni_jvm_1_4_0.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,9 +24,6 @@
         <task path="$PROJECT_DIR$">
           <activation />
         </task>
-        <task path="$PROJECT_DIR$">
-          <activation />
-        </task>
         <projects_view>
           <tree_state>
             <expand>
@@ -82,12 +35,6 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="Clip4Moni" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="Clip4Moni" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="build" type="c8890929:TasksNode$1" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
@@ -134,7 +81,7 @@
       <recent name="C:\Users\tkuen\Entwicklung\Bitbucket\clip4moni\src\jvmMain" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.Clip4Moni [run]">
+  <component name="RunManager" selected="Gradle.clip4moni [packageMsi]">
     <configuration name="Clip4Moni [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -198,6 +145,27 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
+    <configuration name="clip4moni [packageMsi]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="packageMsi" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
     <configuration name="clip4moni [run]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -219,8 +187,22 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="main" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.clip4moni [packageMsi]" />
         <item itemvalue="Gradle.Clip4Moni [run]" />
         <item itemvalue="Gradle.Clip4Moni [clean]" />
         <item itemvalue="Gradle.clip4moni [run]" />
