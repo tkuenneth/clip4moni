@@ -3,7 +3,7 @@
  *
  * This file is part of Clip4Moni.
  *
- * Copyright (C) 2013 - 2018  Thomas Kuenneth
+ * Copyright (C) 2013 - 2022  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -20,13 +20,10 @@
  */
 package com.thomaskuenneth.clip4moni;
 
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 
 /**
  * This is a Mac-specific helper class. It executes AppleScript scripts.
@@ -37,34 +34,6 @@ public class MacHelp {
 
     private static final String TAG = MacHelp.class.getName();
     private static final Logger LOGGER = Logger.getLogger(TAG);
-    private static final ScriptEngine ENGINE = getScriptEngine();
-
-    /**
-     * If running on Mac OS X, this method tries to obtain an AppleScript script
-     * ENGINE.
-     *
-     * @return an instance of an AppleScript script ENGINE or {@code null}
-     */
-    private static ScriptEngine getScriptEngine() {
-        if (Helper.isMacOSX()) {
-            ScriptEngineManager sem = new ScriptEngineManager();
-            List<ScriptEngineFactory> list = sem.getEngineFactories();
-            for (ScriptEngineFactory factory : list) {
-                String engineName = factory.getEngineName();
-                String engineVersion = factory.getEngineVersion();
-                String langName = factory.getLanguageName();
-                String langVersion = factory.getLanguageVersion();
-                LOGGER.log(Level.INFO, "{0} {1} {2} {3}", new Object[]{engineName, engineVersion, langName, langVersion});
-                List<String> mimeTypes = factory.getMimeTypes();
-                for (String mimeType : mimeTypes) {
-                    if (mimeType.contains("applescript")) {
-                        return factory.getScriptEngine();
-                    }
-                }
-            }
-        }
-        return null;
-    }
 
     /**
      * Activates an app.
@@ -73,8 +42,8 @@ public class MacHelp {
      */
     public static void activateApp(String name) {
         if (name != null) {
-            String program = "tell application \"" + name + "\"\nactivate\nend tell";
-            run(program, "activateApp");
+            String script = "tell application \"" + name + "\"\nactivate\nend tell";
+            run(script);
         }
     }
 
@@ -85,28 +54,59 @@ public class MacHelp {
      */
     public static String getFrontmostApp() {
         String script = "tell application \"System Events\"\nitem 1 of (get name of processes whose frontmost is true)\nend tell";
-        Object result = run(script, "getFrontmostApp");
-        if (result != null) {
-            return result.toString();
+        return run(script);
+    }
+
+    private static String run(String script) {
+        StringBuilder sbIS = new StringBuilder();
+        StringBuilder sbES = new StringBuilder();
+        ProcessBuilder pb = new ProcessBuilder("/usr/bin/osascript", "-e", script);
+        int result = start(pb, sbIS, sbES);
+        if (result == 0) {
+            return sbIS.toString().trim();
+        } else {
+            LOGGER.log(Level.SEVERE, sbES.toString());
+            return null;
         }
-        return null;
     }
 
     /**
-     * Executes a script.
+     * Starts a process.
      *
-     * @param script     the script
-     * @param methodName used if an exception is thrown
-     * @return the result of the script execution or {@code null}
+     * @param pb   ProcessBuilder instance
+     * @param sbIS StringBuilder to recieve the input stream
+     * @param sbES StringBuilder to recieve the error stream
+     * @return return value of the process
      */
-    private static Object run(String script, String methodName) {
-        if ((Helper.isMacOSXWorkaroundActive()) && (ENGINE != null)) {
-            try {
-                return ENGINE.eval(script);
-            } catch (ScriptException ex) {
-                LOGGER.throwing(TAG, methodName, ex);
+    private static int start(ProcessBuilder pb, StringBuilder sbIS, StringBuilder sbES) {
+        int exit = 1;
+        try {
+            Process p = pb.start();
+            InputStream is = p.getInputStream();
+            int isData;
+            InputStream es = p.getErrorStream();
+            int esData;
+            while (true) {
+                isData = is.read();
+                esData = es.read();
+                if (isData != -1) {
+                    sbIS.append((char) isData);
+                }
+                if (esData != -1) {
+                    sbES.append((char) esData);
+                }
+                if ((isData == -1) && (esData == -1)) {
+                    try {
+                        exit = p.exitValue();
+                        break;
+                    } catch (IllegalThreadStateException e) {
+                        // no logging needed... just waiting
+                    }
+                }
             }
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "exception while reading", e);
         }
-        return null;
+        return exit;
     }
 }
