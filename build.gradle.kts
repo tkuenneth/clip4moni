@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.thomaskuenneth.clip4moni"
-version = "1.4.0"
+version = "1.4.1"
 
 repositories {
     google()
@@ -39,7 +39,7 @@ compose.desktop {
             modules("java.instrument", "java.prefs", "java.scripting", "jdk.unsupported")
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Clip4Moni"
-            packageVersion = "1.4.0"
+            packageVersion = "1.4.1"
             description = "Manage text snippets"
             copyright = "2008 - 2022 Thomas Kuenneth. All rights reserved."
             vendor = "Thomas Kuenneth"

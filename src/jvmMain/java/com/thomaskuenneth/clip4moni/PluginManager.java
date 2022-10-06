@@ -27,6 +27,7 @@ import javax.swing.text.rtf.RTFEditorKit;
 import java.awt.Menu;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,12 +52,13 @@ public class PluginManager {
     private static final String MI_HTML_TO_RTF = Messages.getString("MI_HTML_TO_RTF");
     private static final String MI_QUOTE = Messages.getString("MI_QUOTE");
     private static final String MI_REPLACE = Messages.getString("MI_REPLACE");
+    private static final String MI_CREATE_UUID = Messages.getString("MI_CREATE_UUID");
 
     private static final String[] PLUGINS = new String[]{MI_SHOW_CONTENTS,
             MI_REPLACE, MI_REMOVE_BLANKS,
             MI_REMOVE_SEMIVOWELS, MI_TAB_TO_SPACE, MI_UPPERCASE,
             MI_REMOVE_CRLF, MI_REMOVE_SPECIALS, MI_STRIP_NUMBERS,
-            MI_HTML_TO_RTF, MI_QUOTE};
+            MI_HTML_TO_RTF, MI_QUOTE, MI_CREATE_UUID};
 
     /**
      * Populates a given menu with the plugins
@@ -106,8 +108,15 @@ public class PluginManager {
             return d.getContents();
         } else if (cmd.equalsIgnoreCase(MI_QUOTE)) {
             return quote(in);
+        } else if (cmd.equalsIgnoreCase(MI_CREATE_UUID)) {
+            return createRandomUUID();
         }
         return null;
+    }
+
+    private static String createRandomUUID() {
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString();
     }
 
     /**
