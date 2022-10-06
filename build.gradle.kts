@@ -44,7 +44,7 @@ compose.desktop {
             copyright = "2008 - 2022 Thomas Kuenneth. All rights reserved."
             vendor = "Thomas Kuenneth"
             macOS {
-                iconFile.set(project.file("Clip4Moni.icns"))
+                iconFile.set(project.file("artwork/Clip4Moni.icns"))
             }
             windows {
                 iconFile.set(project.file("artwork/Clip4Moni.ico"))
