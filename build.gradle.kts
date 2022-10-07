@@ -32,6 +32,12 @@ kotlin {
     }
 }
 
+val macExtraPlistKeys: String
+    get() = """
+        <key>LSUIElement</key>
+        <string>1</string>
+    """.trim()
+
 compose.desktop {
     application {
         mainClass = "MainKt"
@@ -44,6 +50,10 @@ compose.desktop {
             copyright = "2008 - 2022 Thomas Kuenneth. All rights reserved."
             vendor = "Thomas Kuenneth"
             macOS {
+                bundleID = "com.thomaskuenneth.clip4moni"
+                infoPlist {
+                    extraKeysRawXml = macExtraPlistKeys
+                }
                 iconFile.set(project.file("artwork/Clip4Moni.icns"))
             }
             windows {
