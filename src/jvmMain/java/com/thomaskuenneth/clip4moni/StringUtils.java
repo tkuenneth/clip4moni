@@ -3,7 +3,7 @@
  *
  * This file is part of Clip4Moni.
  *
- * Copyright (C) 2015 - 2017  Thomas Kuenneth
+ * Copyright (C) 2015 - 2022  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -32,8 +32,6 @@ public final class StringUtils {
 
     private static final String CLASSNAME = StringUtils.class.getName();
     private static final Logger LOGGER = Logger.getLogger(CLASSNAME);
-
-    public static final String UNKNOWN = "???";
     public static final String EMPTY = "";
 
     public static String decode(String s) {
@@ -51,8 +49,7 @@ public final class StringUtils {
                 ch = s.charAt(i);
                 i += 1;
                 switch (ch) {
-                    case 'u':
-                    case 'U':
+                    case 'u', 'U' -> {
                         int end = i + 4;
                         if (end > length) {
                             sb.append(ch);
@@ -66,10 +63,8 @@ public final class StringUtils {
                                 LOGGER.log(Level.SEVERE, "decode()", e);
                             }
                         }
-                        break;
-                    case '\\':
-                        sb.append(ch);
-                        break;
+                    }
+                    case '\\' -> sb.append(ch);
                 }
             } else {
                 sb.append(ch);
@@ -79,15 +74,5 @@ public final class StringUtils {
     }
 
     private StringUtils() {
-    }
-
-    /**
-     * Ensures that a string is not null.
-     *
-     * @param s string to be checked
-     * @return the string or "???"
-     */
-    public static String ensureNotNull(String s) {
-        return (s != null) ? s : UNKNOWN;
     }
 }

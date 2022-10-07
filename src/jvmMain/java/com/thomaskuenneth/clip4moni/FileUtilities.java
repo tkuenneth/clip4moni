@@ -2,7 +2,7 @@ package com.thomaskuenneth.clip4moni;
 
 /*
  * FileUtilities.java - This file is part of TKNotesAndTasks.
- * Copyright (C) 2013 - 2014  Thomas Kuenneth
+ * Copyright (C) 2013 - 2022  Thomas Kuenneth
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3
@@ -17,14 +17,9 @@ package com.thomaskuenneth.clip4moni;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import javax.swing.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -37,63 +32,17 @@ public class FileUtilities {
     private static final String CLASS_NAME = FileUtilities.class.getName();
     private static final Logger LOGGER = Logger.getLogger(CLASS_NAME);
 
-    /**
-     * Reads a file and returns its lines as a list of strings.
-     *
-     * @param f the file to read
-     * @return a list of strings
-     */
-    public static List<String> getLines(File f) {
-        ArrayList<String> l = new ArrayList<>();
-        FileReader r = null;
-        BufferedReader br = null;
-        try {
-            r = new FileReader(f);
-            br = new BufferedReader(r);
-            String line;
-            while ((line = br.readLine()) != null) {
-                l.add(line);
-            }
-        } catch (IOException e) {
-            LOGGER.throwing(CLASS_NAME, "getLines", e);
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    LOGGER.throwing(CLASS_NAME, "getLines", e);
-                }
-            }
-            if (r != null) {
-                try {
-                    r.close();
-                } catch (IOException e) {
-                    LOGGER.throwing(CLASS_NAME, "getLines", e);
-                }
-            }
-        }
-        return l;
-    }
-
-    public static String getResourceAsString(Class c, String url) {
+    public static String getResourceAsString(Class<? extends JComponent> c, String url) {
         StringBuilder sb = new StringBuilder();
-        InputStream is = null;
-        try {
-            is = c.getResourceAsStream(url);
-            int i;
-            while ((i = is.read()) != -1) {
-                sb.append((char) i);
+        try (InputStream is = c.getResourceAsStream(url)) {
+            if (is != null) {
+                int i;
+                while ((i = is.read()) != -1) {
+                    sb.append((char) i);
+                }
             }
         } catch (IOException e) {
             LOGGER.throwing(CLASS_NAME, "getResourceAsString", e);
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    LOGGER.throwing(CLASS_NAME, "getResourceAsString", e);
-                }
-            }
         }
         return sb.toString();
     }
