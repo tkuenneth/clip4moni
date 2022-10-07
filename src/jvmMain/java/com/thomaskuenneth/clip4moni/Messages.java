@@ -44,7 +44,6 @@ public class Messages {
     public static final String BTTN_DOWN = getString("BTTN_DOWN");
     public static final String BTTN_DELETE = getString("BTTN_DELETE");
     public static final String BTTN_EDIT = getString("BTTN_EDIT");
-    public static final String BTTN_SETTINGS_SNIPPETS_PATH = getString("BTTN_SETTINGS_SNIPPETS_PATH");
     public static final String BTTN_COPY = getString("BTTN_COPY");
 
     public static String getString(String key) {
