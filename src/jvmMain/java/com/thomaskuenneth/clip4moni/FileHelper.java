@@ -20,10 +20,8 @@
  */
 package com.thomaskuenneth.clip4moni;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.swing.*;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -152,5 +150,20 @@ public class FileHelper {
             }
         }
         return result;
+    }
+
+    public static String getResourceAsString(Class<? extends JComponent> c, String url) {
+        StringBuilder sb = new StringBuilder();
+        try (InputStream is = c.getResourceAsStream(url)) {
+            if (is != null) {
+                int i;
+                while ((i = is.read()) != -1) {
+                    sb.append((char) i);
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.throwing(TAG, "getResourceAsString", e);
+        }
+        return sb.toString();
     }
 }

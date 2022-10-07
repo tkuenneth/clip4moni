@@ -20,20 +20,13 @@
  */
 package com.thomaskuenneth.clip4moni;
 
-import java.awt.BorderLayout;
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.Font;
+import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import java.awt.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.logging.Logger;
-import javax.swing.BorderFactory;
-import javax.swing.JEditorPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.UIDefaults;
-import javax.swing.event.HyperlinkEvent;
 
 /**
  * This class displays program and copyright information
@@ -60,7 +53,7 @@ public class AboutView extends JPanel {
         JEditorPane pane = new JEditorPane();
         pane.setPreferredSize(UIHelper.PREFERRED_SIZE);
         Font font = pane.getFont();
-        String html = FileUtilities.getResourceAsString(getClass(), URL_INFO);
+        String html = FileHelper.getResourceAsString(getClass(), URL_INFO);
         Dimension screenSize = Helper.getScreenSize();
         html = MessageFormat.format(html, font.getFamily(), getVersion(),
                 getJavaVersion(), getJavaVendor(),
