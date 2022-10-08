@@ -1,37 +1,34 @@
-// Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-import androidx.compose.material.MaterialTheme
-import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
-import com.thomaskuenneth.clip4moni.Clip4MoniApplication
+/*
+ * Main.kt
+ *
+ * This file is part of Clip4Moni.
+ *
+ * Copyright (C) 2008 - 2022  Thomas Kuenneth
+ *
+ * Clip4Moni is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+package com.thomaskuenneth.clip4moni
 
-@Composable
-@Preview
-fun App() {
-    var text by remember { mutableStateOf("Hello, World!") }
+import java.util.ResourceBundle.getBundle
 
-    MaterialTheme {
-        Button(onClick = {
-            text = "Hello, Desktop!"
-        }) {
-            Text(text)
-        }
+class Clip4Moni {
+    companion object {
+        @JvmField
+        val VERSION: String = getBundle("version").getString("VERSION")
     }
 }
 
 fun main() {
     Clip4MoniApplication.launch()
-}
-
-fun main2() = application {
-    Window(onCloseRequest = ::exitApplication) {
-        App()
-    }
 }

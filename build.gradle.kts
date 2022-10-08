@@ -1,5 +1,7 @@
 import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import java.util.*
+import java.io.*
 
 plugins {
     kotlin("multiplatform")
@@ -7,7 +9,14 @@ plugins {
 }
 
 group = "com.thomaskuenneth.clip4moni"
-version = "1.4.2"
+val properties = Properties()
+val file = rootProject.file("src/jvmMain/resources/version.properties")
+if (file.isFile) {
+    InputStreamReader(FileInputStream(file), Charsets.UTF_8).use { reader ->
+        properties.load(reader)
+    }
+} else error("${file.absolutePath} not found")
+version = properties.getProperty("VERSION")
 
 repositories {
     google()
@@ -40,12 +49,12 @@ val macExtraPlistKeys: String
 
 compose.desktop {
     application {
-        mainClass = "MainKt"
+        mainClass = "com.thomaskuenneth.clip4moni.MainKt"
         nativeDistributions {
             modules("java.instrument", "java.prefs", "java.scripting", "jdk.unsupported")
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Clip4Moni"
-            packageVersion = "1.4.2"
+            packageVersion = version.toString()
             description = "Manage text snippets"
             copyright = "2008 - 2022 Thomas Kuenneth. All rights reserved."
             vendor = "Thomas Kuenneth"
