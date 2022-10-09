@@ -27,6 +27,8 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+import static com.thomaskuenneth.clip4moni.MainKt.paste;
+
 /**
  * This dialog box shows a list of entries and allows to edit them.
  *
@@ -59,7 +61,7 @@ public class EditEntriesDialog extends AbstractDialog {
         } else if (cmd.equals(Messages.BTTN_COPY)) {
             Entry entry = list.getSelectedValue();
             if (entry != null) {
-                Clip4MoniApplication.Companion.getInstance().paste(entry.getValue());
+                paste(entry.getValue());
             }
         }
     });

@@ -48,11 +48,17 @@ class Clip4Moni {
     }
 }
 
+private val CLASSNAME = Clip4MoniApplication::class.java.name
+private val LOGGER = Logger.getLogger(CLASSNAME)
+
+private lateinit var systemClipboard: Clipboard
+private lateinit var plainText: DataFlavor
+
 fun main() {
     SwingUtilities.invokeLater {
         Clip4MoniApplication.instance.setupTaskbar()
         Helper.restoreLookAndFeel()
-        Clip4MoniApplication.instance.prepareClipboard()
+        prepareClipboard()
         Clip4MoniApplication.instance.createUI()
         Clip4MoniApplication.instance.setupWatchService()
     }
@@ -62,13 +68,94 @@ fun main() {
 //    }
 }
 
+fun paste(filename: String?) {
+    val f = FileHelper.createFilename(filename)
+    val str = FileHelper.loadFile(f)
+    setContents(str)
+}
+
+private fun prepareClipboard() {
+    systemClipboard = Helper.getSystemClipboard()
+    try {
+        plainText = DataFlavor("text/plain")
+    } catch (ex: ClassNotFoundException) {
+        LOGGER.throwing(CLASSNAME, "prepareClipboard()", ex)
+    }
+}
+
+private fun setContents(text: String?) {
+    if (text != null) {
+        val t: Transferable = if (text.startsWith("{\\rtf1")) {
+            object : Transferable {
+                override fun getTransferDataFlavors(): Array<DataFlavor> {
+                    try {
+                        return arrayOf(DataFlavor("text/rtf"))
+                    } catch (ex: ClassNotFoundException) {
+                        LOGGER.log(Level.SEVERE, "setContents()", ex)
+                    }
+                    return arrayOf(DataFlavor.getTextPlainUnicodeFlavor())
+                }
+
+                override fun isDataFlavorSupported(flavor: DataFlavor): Boolean {
+                    return true
+                }
+
+                override fun getTransferData(flavor: DataFlavor): Any {
+                    return ByteArrayInputStream(text.toByteArray(StandardCharsets.US_ASCII))
+                }
+            }
+        } else {
+            StringSelection(text)
+        }
+        systemClipboard.setContents(t, Clip4MoniApplication.instance)
+    }
+}
+
+private fun copyFromClipboard(): String {
+    val sb = StringBuilder()
+    try {
+        systemClipboard.getContents(null)?.let { contents ->
+            for (flavor in contents.transferDataFlavors) {
+                if (flavor.isMimeTypeEqual(plainText)) {
+                    var reader: Reader? = null
+                    try {
+                        reader = flavor.getReaderForText(contents)
+                        var ch: Int
+                        while (reader.read().also { ch = it } != -1) {
+                            sb.append(ch.toChar())
+                        }
+                    } catch (e: UnsupportedFlavorException) {
+                        LOGGER.throwing(CLASSNAME, "copyFromClipboard()", e)
+                    } catch (e: IOException) {
+                        LOGGER.throwing(CLASSNAME, "copyFromClipboard()", e)
+                    } finally {
+                        if (reader != null) {
+                            try {
+                                reader.close()
+                            } catch (e: IOException) {
+                                LOGGER.throwing(CLASSNAME, "copyFromClipboard()", e)
+                            }
+                        }
+                    }
+                    break
+                }
+            }
+        }
+    } catch (e: IllegalStateException) {
+        LOGGER.throwing(CLASSNAME, "copyFromClipboard()", e)
+    }
+    return sb.toString()
+}
+
+private fun quit(result: Int = 0) {
+    exitProcess(result)
+}
+
 class Clip4MoniApplication private constructor() : ActionListener, ClipboardOwner {
 
     private lateinit var menu: PopupMenu
     private lateinit var snippets: DefaultListModel<Entry>
-    private lateinit var systemClipboard: Clipboard
 
-    private var plainText: DataFlavor? = null
     private var pluginMenu: Menu? = null
     private var launchMenu: Menu? = null
 
@@ -147,15 +234,6 @@ class Clip4MoniApplication private constructor() : ActionListener, ClipboardOwne
         t.start()
     }
 
-    fun prepareClipboard() {
-        systemClipboard = Helper.getSystemClipboard()
-        try {
-            plainText = DataFlavor("text/plain")
-        } catch (ex: ClassNotFoundException) {
-            LOGGER.throwing(CLASSNAME, "prepareClipboard()", ex)
-        }
-    }
-
     fun createUI() {
         if (!SystemTray.isSupported()) {
             LOGGER.log(Level.SEVERE, "system tray not supported")
@@ -226,40 +304,6 @@ class Clip4MoniApplication private constructor() : ActionListener, ClipboardOwne
                 MacHelp.activateApp(name)
             }
         }.start()
-    }
-
-    private fun setContents(text: String?) {
-        if (text != null) {
-            val t: Transferable = if (text.startsWith("{\\rtf1")) {
-                object : Transferable {
-                    override fun getTransferDataFlavors(): Array<DataFlavor> {
-                        try {
-                            return arrayOf(DataFlavor("text/rtf"))
-                        } catch (ex: ClassNotFoundException) {
-                            LOGGER.log(Level.SEVERE, "setContents()", ex)
-                        }
-                        return arrayOf(DataFlavor.getTextPlainUnicodeFlavor())
-                    }
-
-                    override fun isDataFlavorSupported(flavor: DataFlavor): Boolean {
-                        return true
-                    }
-
-                    override fun getTransferData(flavor: DataFlavor): Any {
-                        return ByteArrayInputStream(text.toByteArray(StandardCharsets.US_ASCII))
-                    }
-                }
-            } else {
-                StringSelection(text)
-            }
-            systemClipboard.setContents(t, instance)
-        }
-    }
-
-    fun paste(filename: String?) {
-        val f = FileHelper.createFilename(filename)
-        val str = FileHelper.loadFile(f)
-        setContents(str)
     }
 
     private fun createPluginMenu() {
@@ -388,44 +432,6 @@ class Clip4MoniApplication private constructor() : ActionListener, ClipboardOwne
         editContents(copyFromClipboard(), null)
     }
 
-    private fun copyFromClipboard(): String {
-        val sb = StringBuilder()
-        try {
-            val contents = systemClipboard.getContents(null)
-            if (contents != null) {
-                val flavors = contents.transferDataFlavors
-                for (flav in flavors) {
-                    if (flav.isMimeTypeEqual(plainText)) {
-                        var `in`: Reader? = null
-                        try {
-                            `in` = flav.getReaderForText(contents)
-                            var ch: Int
-                            while (`in`.read().also { ch = it } != -1) {
-                                sb.append(ch.toChar())
-                            }
-                        } catch (e: UnsupportedFlavorException) {
-                            LOGGER.throwing(CLASSNAME, "copyFromClipboard()", e)
-                        } catch (e: IOException) {
-                            LOGGER.throwing(CLASSNAME, "copyFromClipboard()", e)
-                        } finally {
-                            if (`in` != null) {
-                                try {
-                                    `in`.close()
-                                } catch (e: IOException) {
-                                    LOGGER.throwing(CLASSNAME, "copyFromClipboard()", e)
-                                }
-                            }
-                        }
-                        break
-                    }
-                }
-            }
-        } catch (e: IllegalStateException) {
-            LOGGER.throwing(CLASSNAME, "copyFromClipboard()", e)
-        }
-        return sb.toString()
-    }
-
     private fun info() {
         val icon = UIHelper.getImageIcon(javaClass, PROGRAMICON)
         JOptionPane.showMessageDialog(
@@ -443,10 +449,6 @@ class Clip4MoniApplication private constructor() : ActionListener, ClipboardOwne
             loadList()
             populatePopup()
         }
-    }
-
-    private fun quit(result: Int = 0) {
-        exitProcess(result)
     }
 
     fun deleteEntry(e: Entry) {
@@ -489,8 +491,6 @@ class Clip4MoniApplication private constructor() : ActionListener, ClipboardOwne
 
     companion object {
         val instance = Clip4MoniApplication()
-        private val CLASSNAME = Clip4MoniApplication::class.java.name
-        private val LOGGER = Logger.getLogger(CLASSNAME)
         private const val ICONFILENAME_16 = "com/thomaskuenneth/clip4moni/graphics/16x16.png"
         private const val ICONFILENAME_22 = "com/thomaskuenneth/clip4moni/graphics/17x22.png"
         private const val PROGRAMICON = "com/thomaskuenneth/clip4moni/graphics/logo.png"
