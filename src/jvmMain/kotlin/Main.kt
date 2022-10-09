@@ -3,7 +3,7 @@
  *
  * This file is part of Clip4Moni.
  *
- * Copyright (C) 2008 - 2022  Thomas Kuenneth
+ * Copyright (C) 2022  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -49,7 +49,17 @@ class Clip4Moni {
 }
 
 fun main() {
-    Clip4MoniApplication.launch()
+    SwingUtilities.invokeLater {
+        Clip4MoniApplication.instance.setupTaskbar()
+        Helper.restoreLookAndFeel()
+        Clip4MoniApplication.instance.prepareClipboard()
+        Clip4MoniApplication.instance.createUI()
+        Clip4MoniApplication.instance.setupWatchService()
+    }
+//    application {
+//        Tray(icon = painterResource(resourcePath = "com/thomaskuenneth/clip4moni/graphics/17x22.png")) {
+//        }
+//    }
 }
 
 class Clip4MoniApplication private constructor() : ActionListener, ClipboardOwner {
@@ -94,11 +104,7 @@ class Clip4MoniApplication private constructor() : ActionListener, ClipboardOwne
         }
     }
 
-    init {
-        setupTaskbar()
-    }
-
-    private fun setupTaskbar() {
+    fun setupTaskbar() {
         if (Taskbar.isTaskbarSupported()) {
             val tb = Taskbar.getTaskbar()
             if (tb.isSupported(Taskbar.Feature.ICON_IMAGE)) {
@@ -108,7 +114,7 @@ class Clip4MoniApplication private constructor() : ActionListener, ClipboardOwne
         }
     }
 
-    private fun setupWatchService() {
+    fun setupWatchService() {
         val t = Thread {
             try {
                 val watchService = FileSystems.getDefault().newWatchService()
@@ -141,7 +147,7 @@ class Clip4MoniApplication private constructor() : ActionListener, ClipboardOwne
         t.start()
     }
 
-    private fun prepareClipboard() {
+    fun prepareClipboard() {
         systemClipboard = Helper.getSystemClipboard()
         try {
             plainText = DataFlavor("text/plain")
@@ -150,10 +156,10 @@ class Clip4MoniApplication private constructor() : ActionListener, ClipboardOwne
         }
     }
 
-    private fun createUI() {
+    fun createUI() {
         if (!SystemTray.isSupported()) {
             LOGGER.log(Level.SEVERE, "system tray not supported")
-            exitProcess(1)
+            quit(1)
         }
         val tray = SystemTray.getSystemTray()
         snippets = DefaultListModel()
@@ -439,8 +445,8 @@ class Clip4MoniApplication private constructor() : ActionListener, ClipboardOwne
         }
     }
 
-    private fun quit() {
-        exitProcess(0)
+    private fun quit(result: Int = 0) {
+        exitProcess(result)
     }
 
     fun deleteEntry(e: Entry) {
@@ -488,13 +494,5 @@ class Clip4MoniApplication private constructor() : ActionListener, ClipboardOwne
         private const val ICONFILENAME_16 = "com/thomaskuenneth/clip4moni/graphics/16x16.png"
         private const val ICONFILENAME_22 = "com/thomaskuenneth/clip4moni/graphics/17x22.png"
         private const val PROGRAMICON = "com/thomaskuenneth/clip4moni/graphics/logo.png"
-        fun launch() {
-            SwingUtilities.invokeLater {
-                Helper.restoreLookAndFeel()
-                instance.prepareClipboard()
-                instance.createUI()
-                instance.setupWatchService()
-            }
-        }
     }
 }
