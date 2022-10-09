@@ -3,7 +3,7 @@
  *
  * This file is part of Clip4Moni.
  *
- * Copyright (C) 2013 - 2017  Thomas Kuenneth
+ * Copyright (C) 2013 - 2022  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -24,9 +24,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionListener;
 
 /**
@@ -46,13 +44,13 @@ public class EditEntriesDialog extends AbstractDialog {
         if (cmd.equals(Messages.BTTN_DELETE)) {
             Entry entry = list.getSelectedValue();
             if (entry != null) {
-                Clip4MoniApplication.getInstance().deleteEntry(entry);
+                Clip4MoniApplication.Companion.getInstance().deleteEntry(entry);
             }
             updateEditEntriesButtons();
         } else if (cmd.equals(Messages.BTTN_EDIT)) {
             Entry entry = list.getSelectedValue();
             if (entry != null) {
-                Clip4MoniApplication.getInstance().editContents(null, entry);
+                Clip4MoniApplication.Companion.getInstance().editContents(null, entry);
             }
         } else if (cmd.equals(Messages.BTTN_UP)) {
             moveEntry(true);
@@ -61,7 +59,7 @@ public class EditEntriesDialog extends AbstractDialog {
         } else if (cmd.equals(Messages.BTTN_COPY)) {
             Entry entry = list.getSelectedValue();
             if (entry != null) {
-                Clip4MoniApplication.getInstance().paste(entry.getValue());
+                Clip4MoniApplication.Companion.getInstance().paste(entry.getValue());
             }
         }
     });
