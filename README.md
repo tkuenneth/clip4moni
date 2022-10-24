@@ -8,3 +8,6 @@ just choose it from a small menu. The corresponding text is put on the system cl
 Clip4Moni was originally written in Java. Some parts have been re-written in Kotlin.
 
 Clip4Moni is released under the terms of the GNU GENERAL PUBLIC LICENSE Version 2.
+
+*Note for macOS users*  
+If macOS tells you that the app is damaged and should be deleted you can try to fix this by executing `xattr -cr /Applications/Clip4Moni.app` in *Terminal*.
