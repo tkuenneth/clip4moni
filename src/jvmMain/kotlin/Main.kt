@@ -41,14 +41,7 @@ import javax.swing.JOptionPane
 import javax.swing.SwingUtilities
 import kotlin.system.exitProcess
 
-class Clip4Moni {
-    companion object {
-        @JvmField
-        val VERSION: String = getBundle("version").getString("VERSION")
-    }
-}
-
-private val CLASSNAME = Clip4MoniApplication::class.java.name
+private val CLASSNAME = Clip4Moni::class.java.name
 private val LOGGER = Logger.getLogger(CLASSNAME)
 
 private lateinit var systemClipboard: Clipboard
@@ -56,16 +49,12 @@ private lateinit var plainText: DataFlavor
 
 fun main() {
     SwingUtilities.invokeLater {
-        Clip4MoniApplication.instance.setupTaskbar()
+        Clip4Moni.instance.setupTaskbar()
         Helper.restoreLookAndFeel()
         prepareClipboard()
-        Clip4MoniApplication.instance.createUI()
-        Clip4MoniApplication.instance.setupWatchService()
+        Clip4Moni.instance.createUI()
+        Clip4Moni.instance.setupWatchService()
     }
-//    application {
-//        Tray(icon = painterResource(resourcePath = "com/thomaskuenneth/clip4moni/graphics/17x22.png")) {
-//        }
-//    }
 }
 
 fun paste(filename: String?) {
@@ -107,7 +96,7 @@ private fun setContents(text: String?) {
         } else {
             StringSelection(text)
         }
-        systemClipboard.setContents(t, Clip4MoniApplication.instance)
+        systemClipboard.setContents(t, Clip4Moni.instance)
     }
 }
 
@@ -151,7 +140,7 @@ private fun quit(result: Int = 0) {
     exitProcess(result)
 }
 
-class Clip4MoniApplication private constructor() : ActionListener, ClipboardOwner {
+class Clip4Moni private constructor() : ActionListener, ClipboardOwner {
 
     private lateinit var menu: PopupMenu
     private lateinit var snippets: DefaultListModel<Entry>
@@ -195,7 +184,7 @@ class Clip4MoniApplication private constructor() : ActionListener, ClipboardOwne
         if (Taskbar.isTaskbarSupported()) {
             val tb = Taskbar.getTaskbar()
             if (tb.isSupported(Taskbar.Feature.ICON_IMAGE)) {
-                val image = UIHelper.getImageIcon(javaClass, PROGRAMICON).image
+                val image = UIHelper.getImageIcon(javaClass, PROGRAM_ICON).image
                 tb.iconImage = image
             }
         }
@@ -254,7 +243,7 @@ class Clip4MoniApplication private constructor() : ActionListener, ClipboardOwne
             "tray icon size: {0}x{1} pixels",
             arrayOf<Any>(preferredSize.width, preferredSize.height)
         )
-        val name = if (preferredSize.height >= 22) ICONFILENAME_22 else ICONFILENAME_16
+        val name = if (preferredSize.height >= 22) ICON_FILENAME_22 else ICON_FILENAME_16
         val icon = UIHelper.getImageIcon(javaClass, name)
         val trayIcon = TrayIcon(icon.image, Helper.PROGNAME, menu)
         trayIcon.actionCommand = Messages.MI_EDITLIST
@@ -433,7 +422,7 @@ class Clip4MoniApplication private constructor() : ActionListener, ClipboardOwne
     }
 
     private fun info() {
-        val icon = UIHelper.getImageIcon(javaClass, PROGRAMICON)
+        val icon = UIHelper.getImageIcon(javaClass, PROGRAM_ICON)
         JOptionPane.showMessageDialog(
             null, AboutView(), Messages.getString("STR_ABOUT"),
             JOptionPane.INFORMATION_MESSAGE, icon
@@ -490,9 +479,12 @@ class Clip4MoniApplication private constructor() : ActionListener, ClipboardOwne
     }
 
     companion object {
-        val instance = Clip4MoniApplication()
-        private const val ICONFILENAME_16 = "com/thomaskuenneth/clip4moni/graphics/16x16.png"
-        private const val ICONFILENAME_22 = "com/thomaskuenneth/clip4moni/graphics/17x22.png"
-        private const val PROGRAMICON = "com/thomaskuenneth/clip4moni/graphics/logo.png"
+        @JvmField
+        val VERSION: String = getBundle("version").getString("VERSION")
+
+        val instance = Clip4Moni()
+        private const val ICON_FILENAME_16 = "com/thomaskuenneth/clip4moni/graphics/16x16.png"
+        private const val ICON_FILENAME_22 = "com/thomaskuenneth/clip4moni/graphics/17x22.png"
+        private const val PROGRAM_ICON = "com/thomaskuenneth/clip4moni/graphics/logo.png"
     }
 }

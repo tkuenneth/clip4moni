@@ -46,13 +46,13 @@ public class EditEntriesDialog extends AbstractDialog {
         if (cmd.equals(Messages.BTTN_DELETE)) {
             Entry entry = list.getSelectedValue();
             if (entry != null) {
-                Clip4MoniApplication.Companion.getInstance().deleteEntry(entry);
+                Clip4Moni.Companion.getInstance().deleteEntry(entry);
             }
             updateEditEntriesButtons();
         } else if (cmd.equals(Messages.BTTN_EDIT)) {
             Entry entry = list.getSelectedValue();
             if (entry != null) {
-                Clip4MoniApplication.Companion.getInstance().editContents(null, entry);
+                Clip4Moni.Companion.getInstance().editContents(null, entry);
             }
         } else if (cmd.equals(Messages.BTTN_UP)) {
             moveEntry(true);
