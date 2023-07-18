@@ -3,7 +3,7 @@
  *
  * This file is part of Clip4Moni.
  *
- * Copyright (C) 2008 - 2019  Thomas Kuenneth
+ * Copyright (C) 2008 - 2023  Thomas Kuenneth
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -26,7 +26,13 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.rtf.RTFEditorKit;
 import java.awt.Menu;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringReader;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -60,12 +66,6 @@ public class PluginManager {
             MI_REMOVE_CRLF, MI_REMOVE_SPECIALS, MI_STRIP_NUMBERS,
             MI_HTML_TO_RTF, MI_QUOTE, MI_CREATE_UUID};
 
-    /**
-     * Populates a given menu with the plugins
-     *
-     * @param pm the menu
-     * @param al action listener
-     */
     public static void populateMenu(Menu pm, ActionListener al) {
         for (String piName : PLUGINS) {
             UIHelper.createMenuItem(piName, pm, al, null);
@@ -75,13 +75,6 @@ public class PluginManager {
         }
     }
 
-    /**
-     * If plugins process each line individually, we need to call processData().
-     *
-     * @param cmd command to execute
-     * @param in  the input string
-     * @return result (what a plugin did with the input string)
-     */
     public static String callPlugin(String cmd, String in) {
         if (cmd.equalsIgnoreCase(MI_STRIP_NUMBERS)) {
             return processData(PluginManager::stripNumbers, in);
@@ -119,12 +112,6 @@ public class PluginManager {
         return uuid.toString();
     }
 
-    /**
-     * Formats a string so that it can be used as a quote in emails.
-     *
-     * @param in string to quote
-     * @return string properly formatted for quoting
-     */
     public static String quote(String in) {
         StringBuilder result = new StringBuilder();
         StringBuilder line = new StringBuilder();
@@ -148,12 +135,6 @@ public class PluginManager {
         return result.toString().trim();
     }
 
-    /**
-     * Converts a html string to rtf
-     *
-     * @param html the string containing html
-     * @return the resulting rtf
-     */
     public static String html2Rtf(String html) {
         InputStream is;
         OutputStream os;
@@ -187,22 +168,10 @@ public class PluginManager {
         return null;
     }
 
-    /**
-     * Replaces all occurrences of a tab with two blanks.
-     *
-     * @param line string to modify
-     * @return string with blanks instead of tabs
-     */
     public static String convertTabToSpace(String line) {
         return line.replaceAll("\t", "  ");
     }
 
-    /**
-     * Converts semi vowels to their alternate representations
-     *
-     * @param line string to convert
-     * @return string with semi vowels removed
-     */
     public static String removeSemivowels(String line) {
         char[] src = {'\u00e4', '\u00c4', '\u00f6', '\u00d6', '\u00fc',
                 '\u00dc', '\u00df'};
@@ -228,12 +197,6 @@ public class PluginManager {
         return new String(result, 0, pos);
     }
 
-    /**
-     * Removes all blanks.
-     *
-     * @param line input string
-     * @return string without blanks
-     */
     public static String removeBlanks(String line) {
         int pos = 0;
         int len = line.length();
@@ -272,12 +235,6 @@ public class PluginManager {
         return line;
     }
 
-    /**
-     * Converts a string to uppercase
-     *
-     * @param in a string
-     * @return string with uppercase letters
-     */
     public static String toUpperCase(String in) {
         return in.toUpperCase();
     }

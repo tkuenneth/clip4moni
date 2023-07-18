@@ -56,7 +56,7 @@ compose.desktop {
             packageName = "Clip4Moni"
             packageVersion = version.toString()
             description = "Manage text snippets"
-            copyright = "2008 - 2022 Thomas Kuenneth. All rights reserved."
+            copyright = "2008 - 2023 Thomas Kuenneth. All rights reserved."
             vendor = "Thomas Kuenneth"
             macOS {
                 bundleID = "com.thomaskuenneth.clip4moni"

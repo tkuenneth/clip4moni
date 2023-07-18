@@ -3,7 +3,7 @@
  *
  * This file is part of Clip4Moni.
  *
- * Copyright (C) 2015 - 2019  Thomas Kuenneth
+ * Copyright (C) 2015 - 2023  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -20,25 +20,28 @@
  */
 package com.thomaskuenneth.clip4moni;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JEditorPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.UIDefaults;
 import javax.swing.event.HyperlinkEvent;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.logging.Logger;
 
-/**
- * This class displays program and copyright information
- *
- * @author Thomas Kuenneth
- */
 public class AboutView extends JPanel {
 
     private static final String CLASS_NAME = AboutView.class.getName();
     private static final Logger LOGGER = Logger.getLogger(CLASS_NAME);
 
     private static final String URL_INFO = "/assets/info.txt";
+    private static final String GITHUB_URL = "https://github.com/tkuenneth/clip4moni";
 
     public AboutView() {
         super(new BorderLayout());
@@ -60,7 +63,8 @@ public class AboutView extends JPanel {
                 getOsName(), getOsVersion(),
                 Integer.toString(screenSize.width),
                 Integer.toString(screenSize.height),
-                Integer.toString(Helper.SCREEN_RESOLUTION));
+                Integer.toString(Helper.SCREEN_RESOLUTION),
+                GITHUB_URL);
         pane.setContentType("text/html");
         pane.setText(html);
         pane.addHyperlinkListener((HyperlinkEvent e) -> {
@@ -75,16 +79,14 @@ public class AboutView extends JPanel {
         pane.setCaretPosition(0);
         pane.setEditable(false);
         pane.setBackground(getBackground());
-        // Workaround for Nimbus
         UIDefaults defaults = new UIDefaults();
         defaults.put("EditorPane[Enabled].backgroundPainter", getBackground());
         pane.putClientProperty("Nimbus.Overrides", defaults);
         pane.putClientProperty("Nimbus.Overrides.InheritDefaults", true);
         pane.setBackground(getBackground());
-        // end workaround
-        JScrollPane scrollpane = new JScrollPane(pane);
-        scrollpane.setBorder(BorderFactory.createEmptyBorder());
-        add(scrollpane, BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(pane);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        add(scrollPane, BorderLayout.CENTER);
     }
 
     private static String getJavaVersion() {
