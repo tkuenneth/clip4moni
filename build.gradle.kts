@@ -60,6 +60,14 @@ compose.desktop {
             vendor = "Thomas Kuenneth"
             macOS {
                 bundleID = "com.thomaskuenneth.clip4moni"
+                signing {
+                    sign.set(true)
+                    identity.set("Thomas Kuenneth")
+                }
+                notarization {
+                    appleID.set("thomas.kuenneth@icloud.com")
+                    password.set("@keychain:NOTARIZATION_PASSWORD")
+                }
                 infoPlist {
                     extraKeysRawXml = macExtraPlistKeys
                 }
