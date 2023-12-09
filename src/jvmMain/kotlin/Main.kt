@@ -3,7 +3,7 @@
  *
  * This file is part of Clip4Moni.
  *
- * Copyright (C) 2022  Thomas Kuenneth
+ * Copyright (C) 2022 - 2023  Thomas Kuenneth
  *
  * Clip4Moni is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -27,7 +27,6 @@ import java.awt.event.ActionListener
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.IOException
-import java.io.Reader
 import java.nio.charset.StandardCharsets
 import java.nio.file.FileSystems
 import java.nio.file.Paths
@@ -58,9 +57,11 @@ fun main() {
 }
 
 fun paste(filename: String?) {
-    val f = FileHelper.createFilename(filename)
-    val str = FileHelper.loadFile(f)
-    setContents(str)
+    FileHelper.createFilename(filename)?.let { file ->
+        FileHelper.loadFile(file)?.let { contents ->
+            setContents(contents)
+        }
+    }
 }
 
 private fun prepareClipboard() {
@@ -72,32 +73,30 @@ private fun prepareClipboard() {
     }
 }
 
-private fun setContents(text: String?) {
-    if (text != null) {
-        val t: Transferable = if (text.startsWith("{\\rtf1")) {
-            object : Transferable {
-                override fun getTransferDataFlavors(): Array<DataFlavor> {
-                    try {
-                        return arrayOf(DataFlavor("text/rtf"))
-                    } catch (ex: ClassNotFoundException) {
-                        LOGGER.log(Level.SEVERE, "setContents()", ex)
-                    }
-                    return arrayOf(DataFlavor.getTextPlainUnicodeFlavor())
+private fun setContents(text: String) {
+    val t: Transferable = if (text.startsWith("{\\rtf1")) {
+        object : Transferable {
+            override fun getTransferDataFlavors(): Array<DataFlavor> {
+                try {
+                    return arrayOf(DataFlavor("text/rtf"))
+                } catch (ex: ClassNotFoundException) {
+                    LOGGER.log(Level.SEVERE, "setContents()", ex)
                 }
-
-                override fun isDataFlavorSupported(flavor: DataFlavor): Boolean {
-                    return true
-                }
-
-                override fun getTransferData(flavor: DataFlavor): Any {
-                    return ByteArrayInputStream(text.toByteArray(StandardCharsets.US_ASCII))
-                }
+                return arrayOf(DataFlavor.getTextPlainUnicodeFlavor())
             }
-        } else {
-            StringSelection(text)
+
+            override fun isDataFlavorSupported(flavor: DataFlavor): Boolean {
+                return true
+            }
+
+            override fun getTransferData(flavor: DataFlavor): Any {
+                return ByteArrayInputStream(text.toByteArray(StandardCharsets.US_ASCII))
+            }
         }
-        systemClipboard.setContents(t, Clip4Moni.instance)
+    } else {
+        StringSelection(text)
     }
+    systemClipboard.setContents(t, Clip4Moni.instance)
 }
 
 private fun copyFromClipboard(): String {
@@ -106,25 +105,15 @@ private fun copyFromClipboard(): String {
         systemClipboard.getContents(null)?.let { contents ->
             for (flavor in contents.transferDataFlavors) {
                 if (flavor.isMimeTypeEqual(plainText)) {
-                    var reader: Reader? = null
                     try {
-                        reader = flavor.getReaderForText(contents)
-                        var ch: Int
-                        while (reader.read().also { ch = it } != -1) {
-                            sb.append(ch.toChar())
-                        }
-                    } catch (e: UnsupportedFlavorException) {
-                        LOGGER.throwing(CLASSNAME, "copyFromClipboard()", e)
-                    } catch (e: IOException) {
-                        LOGGER.throwing(CLASSNAME, "copyFromClipboard()", e)
-                    } finally {
-                        if (reader != null) {
-                            try {
-                                reader.close()
-                            } catch (e: IOException) {
-                                LOGGER.throwing(CLASSNAME, "copyFromClipboard()", e)
+                        flavor.getReaderForText(contents).use { reader ->
+                            var ch: Int
+                            while (reader.read().also { ch = it } != -1) {
+                                sb.append(ch.toChar())
                             }
                         }
+                    } catch (e: Exception) {
+                        LOGGER.throwing(CLASSNAME, "copyFromClipboard()", e)
                     }
                     break
                 }
@@ -182,10 +171,10 @@ class Clip4Moni private constructor() : ActionListener, ClipboardOwner {
 
     fun setupTaskbar() {
         if (Taskbar.isTaskbarSupported()) {
-            val tb = Taskbar.getTaskbar()
-            if (tb.isSupported(Taskbar.Feature.ICON_IMAGE)) {
-                val image = UIHelper.getImageIcon(javaClass, PROGRAM_ICON).image
-                tb.iconImage = image
+            Taskbar.getTaskbar().run {
+                if (isSupported(Taskbar.Feature.ICON_IMAGE)) {
+                    iconImage = UIHelper.getImageIcon(javaClass, PROGRAM_ICON).image
+                }
             }
         }
     }
@@ -287,10 +276,11 @@ class Clip4Moni private constructor() : ActionListener, ClipboardOwner {
                 Thread.sleep(250)
             } catch (ignored: InterruptedException) {
             }
-            val text = PluginManager.callPlugin(cmd, copyFromClipboard())
-            SwingUtilities.invokeLater {
-                setContents(text)
-                MacHelp.activateApp(name)
+            PluginManager.callPlugin(cmd, copyFromClipboard())?.let { text ->
+                SwingUtilities.invokeLater {
+                    setContents(text)
+                    MacHelp.activateApp(name)
+                }
             }
         }.start()
     }
