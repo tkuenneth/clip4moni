@@ -26,16 +26,7 @@ jobs:
       with:
         path: ./build/compose/binaries/main-release/msi/*.msi
         name: clip4moni.msi
-        
-  create-windows-release:
-    runs-on: windows-latest
-    needs: [ create-windows-installer]
-    steps:
-    - name: Download msi
-      uses: actions/download-artifact@v3
-      with:
-        name: clip4moni.msi
     - name: Create release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "/Users/runner/work/clip4moni/clip4moni/*.msi"
+        artifacts: "./build/compose/binaries/main-release/msi/*.msi"
