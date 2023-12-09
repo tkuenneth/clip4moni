@@ -1,0 +1,106 @@
+name: Create release
+on: workflow_dispatch  
+
+jobs:
+  create-windows-installer:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ./server
+    steps:
+    - name: Checkout project sources
+      uses: actions/checkout@v3
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'corretto'
+        java-version: 17
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Run packageReleaseMsi with Gradle Wrapper
+      run: ./gradlew packageReleaseMsi
+    - name: Upload asset
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./build/compose/binaries/main-release/msi/*.msi
+        name: clip4moni.msi
+
+  create-macos-installer:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./server
+    steps:
+    - name: Checkout project sources
+      uses: actions/checkout@v3
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'corretto'
+        java-version: 17
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Setup keychain, certificates and passwords
+      env: 
+        MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+        MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+      run: |
+        echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
+        security create-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }} build.keychain
+        security default-keychain -s build.keychain
+        security unlock-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }} build.keychain
+        security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PASSWORD -T /usr/bin/codesign
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k ${{ secrets.KEYCHAIN_PASSWORD }} build.keychain
+    - name: Run createReleaseDistributable with Gradle Wrapper
+      run: ./gradlew createReleaseDistributable
+    - name: "Notarize app bundle"
+      env:
+        PROD_MACOS_NOTARIZATION_APPLE_ID: ${{ secrets.PROD_MACOS_NOTARIZATION_APPLE_ID }}
+        PROD_MACOS_NOTARIZATION_TEAM_ID: ${{ secrets.PROD_MACOS_NOTARIZATION_TEAM_ID }}
+        PROD_MACOS_NOTARIZATION_PWD: ${{ secrets.PROD_MACOS_NOTARIZATION_PWD }}
+      run: |
+        security unlock-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }} build.keychain
+        PATH_TO_APP=/Users/runner/work/clip4moni/clip4moni/build/compose/binaries/main-release/app/Clip4Moni.app
+        echo "Create keychain profile"
+        xcrun notarytool store-credentials "notarytool-profile" --apple-id "$PROD_MACOS_NOTARIZATION_APPLE_ID" --team-id "$PROD_MACOS_NOTARIZATION_TEAM_ID" --password "$PROD_MACOS_NOTARIZATION_PWD"
+        echo "Creating temp notarization archive"
+        ditto -c -k --keepParent $PATH_TO_APP "notarization.zip"
+        echo "Notarize app"
+        xcrun notarytool submit "notarization.zip" --keychain-profile "notarytool-profile" --wait
+        echo "Attach staple"
+        xcrun stapler staple $PATH_TO_APP
+        echo "Create .dmg"
+        mkdir dmg
+        cp -R $PATH_TO_APP dmg
+        cd dmg
+        ln -s /Applications/ Applications
+        cd ..
+        hdiutil create -volname Souffleur -srcfolder dmg -ov -format UDZO Souffleur.dmg
+        ditto -c -k Souffleur.dmg /Users/runner/work/souffleur/souffleur/server/souffleur_macos.zip
+        echo `pwd`
+    - name: Upload asset
+      uses: actions/upload-artifact@v3
+      with:
+        path: /Users/runner/work/souffleur/souffleur/server/souffleur_macos.zip
+        name: souffleur_macos.zip
+        
+  create-release:
+    runs-on: macos-latest
+    needs: [ create-windows-installer,  create-macos-installer]
+    steps:
+    - name: Download macOS zip
+      uses: actions/download-artifact@v3
+      with:
+        name: souffleur_macos.zip
+    - name: Download msi
+      uses: actions/download-artifact@v3
+      with:
+        name: souffleur.msi
+    - name: Create release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "/Users/runner/work/souffleur/souffleur/souffleur_macos.zip,/Users/runner/work/souffleur/souffleur/*.msi"
