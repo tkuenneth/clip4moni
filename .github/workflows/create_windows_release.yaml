@@ -1,5 +1,8 @@
 name: Create Windows release
 on: workflow_dispatch  
+    push:
+      tags:
+        - 'v*'
 
 jobs:
   create-windows-installer:
