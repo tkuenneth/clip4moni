@@ -21,12 +21,13 @@ jobs:
       run: chmod +x gradlew
     - name: Run packageReleaseMsi with Gradle Wrapper
       run: ./gradlew packageReleaseMsi
+    - run: Compress-Archive -Path ./build/compose/binaries/main-release/msi/*.msi -Destination ./clip4moni_windows.zip
     - name: Upload asset
       uses: actions/upload-artifact@v3
       with:
-        path: ./build/compose/binaries/main-release/msi/*.msi
-        name: clip4moni.msi
+        path: ./clip4moni_windows.zip
+        name: clip4moni_windows.zip
     - name: Create release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "./build/compose/binaries/main-release/msi/*.msi"
+        artifacts: "./clip4moni_windows.zip"
