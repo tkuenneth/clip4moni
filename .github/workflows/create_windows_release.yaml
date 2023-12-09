@@ -1,5 +1,5 @@
 name: Create Windows release
-on: workflow_dispatch  
+on:
     push:
       tags:
         - 'v*'
