@@ -1,37 +1,9 @@
-name: Create release
+name: Create macos release
 on: workflow_dispatch  
 
 jobs:
-  create-windows-installer:
-    runs-on: windows-latest
-    defaults:
-      run:
-        working-directory: ./server
-    steps:
-    - name: Checkout project sources
-      uses: actions/checkout@v3
-    - name: Setup Gradle
-      uses: gradle/gradle-build-action@v2
-    - name: Set up JDK
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'corretto'
-        java-version: 17
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Run packageReleaseMsi with Gradle Wrapper
-      run: ./gradlew packageReleaseMsi
-    - name: Upload asset
-      uses: actions/upload-artifact@v3
-      with:
-        path: ./build/compose/binaries/main-release/msi/*.msi
-        name: clip4moni.msi
-
   create-macos-installer:
     runs-on: macos-latest
-    defaults:
-      run:
-        working-directory: ./server
     steps:
     - name: Checkout project sources
       uses: actions/checkout@v3
@@ -79,28 +51,15 @@ jobs:
         cd dmg
         ln -s /Applications/ Applications
         cd ..
-        hdiutil create -volname Souffleur -srcfolder dmg -ov -format UDZO Souffleur.dmg
-        ditto -c -k Souffleur.dmg /Users/runner/work/souffleur/souffleur/server/souffleur_macos.zip
+        hdiutil create -volname Clip4Moni -srcfolder dmg -ov -format UDZO Clip4Moni.dmg
+        ditto -c -k Clip4Moni.dmg /Users/runner/work/clip4moni/clip4moni/clip4moni_macos.zip
         echo `pwd`
     - name: Upload asset
       uses: actions/upload-artifact@v3
       with:
-        path: /Users/runner/work/souffleur/souffleur/server/souffleur_macos.zip
-        name: souffleur_macos.zip
-        
-  create-release:
-    runs-on: macos-latest
-    needs: [ create-windows-installer,  create-macos-installer]
-    steps:
-    - name: Download macOS zip
-      uses: actions/download-artifact@v3
-      with:
-        name: souffleur_macos.zip
-    - name: Download msi
-      uses: actions/download-artifact@v3
-      with:
-        name: souffleur.msi
+        path: /Users/runner/work/clip4moni/clip4moni/clip4moni_macos.zip
+        name: clip4moni_macos.zip
     - name: Create release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "/Users/runner/work/souffleur/souffleur/souffleur_macos.zip,/Users/runner/work/souffleur/souffleur/*.msi"
+        artifacts: "/Users/runner/work/clip4moni/clip4moni/clip4moni_macos.zip"
