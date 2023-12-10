@@ -20,13 +20,22 @@
  */
 package com.thomaskuenneth.clip4moni;
 
-import javax.swing.*;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 
+import static com.thomaskuenneth.clip4moni.MainKt.getInstance;
 import static com.thomaskuenneth.clip4moni.MainKt.paste;
 
 /**
@@ -46,13 +55,13 @@ public class EditEntriesDialog extends AbstractDialog {
         if (cmd.equals(Messages.BTTN_DELETE)) {
             Entry entry = list.getSelectedValue();
             if (entry != null) {
-                Clip4Moni.Companion.getInstance().deleteEntry(entry);
+                getInstance().deleteEntry(entry);
             }
             updateEditEntriesButtons();
         } else if (cmd.equals(Messages.BTTN_EDIT)) {
             Entry entry = list.getSelectedValue();
             if (entry != null) {
-                Clip4Moni.Companion.getInstance().editContents(null, entry);
+                getInstance().editContents(null, entry);
             }
         } else if (cmd.equals(Messages.BTTN_UP)) {
             moveEntry(true);

@@ -46,13 +46,15 @@ private val LOGGER = Logger.getLogger(CLASSNAME)
 private lateinit var systemClipboard: Clipboard
 private lateinit var plainText: DataFlavor
 
+val instance = Clip4Moni()
+
 fun main() {
     SwingUtilities.invokeLater {
-        Clip4Moni.instance.setupTaskbar()
+        instance.setupTaskbar()
         Helper.restoreLookAndFeel()
         prepareClipboard()
-        Clip4Moni.instance.createUI()
-        Clip4Moni.instance.setupWatchService()
+        instance.createUI()
+        instance.setupWatchService()
     }
 }
 
@@ -96,7 +98,7 @@ private fun setContents(text: String) {
     } else {
         StringSelection(text)
     }
-    systemClipboard.setContents(t, Clip4Moni.instance)
+    systemClipboard.setContents(t, instance)
 }
 
 private fun copyFromClipboard(): String {
@@ -129,7 +131,7 @@ private fun quit(result: Int = 0) {
     exitProcess(result)
 }
 
-class Clip4Moni private constructor() : ActionListener, ClipboardOwner {
+class Clip4Moni : ActionListener, ClipboardOwner {
 
     private lateinit var menu: PopupMenu
     private lateinit var snippets: DefaultListModel<Entry>
@@ -173,7 +175,7 @@ class Clip4Moni private constructor() : ActionListener, ClipboardOwner {
         if (Taskbar.isTaskbarSupported()) {
             Taskbar.getTaskbar().run {
                 if (isSupported(Taskbar.Feature.ICON_IMAGE)) {
-                    iconImage = UIHelper.getImageIcon(javaClass, PROGRAM_ICON).image
+                    iconImage = UIHelper.getImageIcon(Clip4Moni::class.java, PROGRAM_ICON).image
                 }
             }
         }
@@ -472,7 +474,6 @@ class Clip4Moni private constructor() : ActionListener, ClipboardOwner {
         @JvmField
         val VERSION: String = getBundle("version").getString("VERSION")
 
-        val instance = Clip4Moni()
         private const val ICON_FILENAME_16 = "com/thomaskuenneth/clip4moni/graphics/16x16.png"
         private const val ICON_FILENAME_22 = "com/thomaskuenneth/clip4moni/graphics/17x22.png"
         private const val PROGRAM_ICON = "com/thomaskuenneth/clip4moni/graphics/logo.png"
