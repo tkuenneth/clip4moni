@@ -1,5 +1,8 @@
-name: Create macos release
-on: workflow_dispatch  
+name: Create macOS release
+on:
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   create-macos-installer:
