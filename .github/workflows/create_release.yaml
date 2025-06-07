@@ -23,7 +23,7 @@ jobs:
           run: ./gradlew packageReleaseMsi
         - run: Compress-Archive -Path ./build/compose/binaries/main-release/msi/*.msi -Destination ./clip4moni_windows.zip
         - name: Upload asset
-          uses: actions/upload-artifact@v3
+          uses: actions/upload-artifact@v4
           with:
             path: ./clip4moni_windows.zip
             name: clip4moni_windows.zip
@@ -81,7 +81,7 @@ jobs:
             ditto -c -k Clip4Moni.dmg /Users/runner/work/clip4moni/clip4moni/clip4moni_macos.zip
             echo `pwd`
         - name: Upload asset
-          uses: actions/upload-artifact@v3
+          uses: actions/upload-artifact@v4
           with:
             path: /Users/runner/work/clip4moni/clip4moni/clip4moni_macos.zip
             name: clip4moni_macos.zip
