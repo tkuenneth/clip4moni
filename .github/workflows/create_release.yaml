@@ -91,11 +91,11 @@ jobs:
         needs: [ create-windows-installer,  create-macos-installer]
         steps:
         - name: Download dmg
-          uses: actions/download-artifact@v3
+          uses: actions/download-artifact@v4
           with:
             name: clip4moni_macos.zip
         - name: Download msi
-          uses: actions/download-artifact@v3
+          uses: actions/download-artifact@v4
           with:
             name: clip4moni_windows.zip
         - name: Create release
