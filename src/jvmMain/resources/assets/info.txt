@@ -11,7 +11,7 @@
         
         <p>
             <a href="{9}">{9}</a><br>
-            <a href="mailto:kuennetht@gmail.com">kuennetht@gmail.com</a>
+            <a href="mailto:kuennetht@gmail.com">mail@tkuenneth.dev</a>
         </p>
 
         <p>
