@@ -45,3 +45,5 @@ bin/
 docs/Gemfile.lock
 
 _site/
+.idea/misc.xml
+.idea/AndroidProjectSystem.xml
